@@ -26,6 +26,7 @@ Pass two arguments ( a string template and an object of data) to invoke immediat
 ## additions/changes to mostache
 * `{INDEX}` is now `{{INDEX}}`, which is more consistent with the syntax
 * `{SEP}, {/SEP}` is now `{{SEP}}, {{/SEP}}`, which is more consistent
-* long paths work in comparing conditionals  `{{#sec.a.length=3}}`
+* uses `==` instead of `=` and quoted string literals to compare  `{{#sec=="main"}}`
+* long paths work in comparing conditionals  `{{#sec.a.length==3}}`
 * any expression can compare, not just equals  `{{#sec.a.length>3}}` or, conversely  `{{^sec.a.length>3}}`
 * razor mode is auto-activated, special `{{@@}}` token not needed
