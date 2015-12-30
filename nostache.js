@@ -8,8 +8,6 @@ var nostache=(function() {
 		rxBraces = /\{\{([^\}]+)\}\}/g,
 		rxElse = /\{\{\!([\w\.]+)\}\}/g,
 		rxNot = /([\^])([^}]+)\}(.+?)\$\{\/\2/g,
-		rxCompare = /([#])([^=]+)\=(.+?)\}(.+?)\$\{\/\2=\3/g,
-		rxCompareNot = /([#])([^=]+)\!\=(.+?)\}(.+?)\$\{\/\2\!=\3/g,
 		rxIf = /([#])([^}]+)\}(.+?)\$\{\/\2/g,
 		rxLoop = /([\.])([^}]+)\}([\w\W]+?)\$\{\/\2/g,
 		rxRazor=/(\W)@([#\^!\/\|\.\)\(]?[\w\.$|]+)/g,
@@ -25,8 +23,6 @@ var nostache=(function() {
 		.replace(rxComments, "") // strip comment blocks
 		.replace(rxBraces, "${$1}") // turn brace expressions into template string literals
 		.replace(rxNot, "!($2)?\"$3\":''") // condense NOT block into template expression
-		.replace(rxCompare, "$2==$3?\"$4\":''") // condense comparing IF block into template expression
-		.replace(rxCompareNot, "$2!=$3?\"$4\":''") // condense comparing IF block into template expression
 		.replace(rxIf, "$2?\"$3\":''") // condense IF block into template expression
 		.replace(rxLoop, function(j,k,a,b){return "("+a+").map((a,b,c)=>_tmp.call(this,"+JSON.stringify(b)+",a,b,true,c),this).join('')";}) // condense loop block into template expression
 		.replace(rxCarrot, "${ob}") // turn carrot marker into template expression
