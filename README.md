@@ -59,6 +59,20 @@ This is a big piece of functionality missing from Mustache.js, and can be quite 
 "Inspired" by MS's VS/MVC razor templates, this alternative syntax can keep visual boilerplate costs down. You can use it for injection, looping, and conditionals, but the allowed characters are more restricted that the traditional `{{}}` delimiters, so it's not the best choice for conplex logic. Lastly, it avoids mistaking email addresses for tokens by insisting upon a non-wordy char to the left of the `@`.
 
 
+### {{INDEX}}
+  Returns the current index when iterating an Array.  <br />
+    `{{#persons}}<li> #{{INDEX}}. {{firstName}} {{lastName}} </li> {{/persons}}`
+
+
+### {{SEP}} mini-section
+   Returns the enclosed block for every value except for the last. <br />
+    `{{SEP}} <br /> {{/SEP}}`
+
+
+### {{!path}} else syntax
+  `{{!path}}` turns into `{{/path}}{{^path}}`, for simpler _else_ handling. <br />
+    `<p>{{#ok}}Y{{!ok}}N{{/ok}}</p>` == `<p>{{#ok}}Y{{/ok}}{{^ok}}N{{/ok}}</p>`
+    
 
 
 
