@@ -1,12 +1,12 @@
 // nostache.js by dandavis [CCBY4]
 var nostache=(function() {
-  // define the syntax of the templates as RegExps:		approximation/eg/note
+  // define the syntax of the templates as RegExps:		approximation/eg
 	var rxImports = /\{\{>([\w\W]+?)\}\}/g,			// {{>...}}
 		rxIndex = /\$\{INDEX\}/g, 			// ${INDEX}
 		rxRazor=/(\W)@([#\^!\/\|\.\)\(]?[\w\.$|]+)/g,	// @[#^!/.)(]*ab.c
-		rxElse = /\{\{\!([\w\.]+)\}\}/g,			// {{!abc}} -simple conditional else
+		rxElse = /\{\{\!([\w\W]+?)\}\}/g,		// {{!...}}
 		rxSep = /\$\{SEP\}([\w\W]+?)\$\{\/SEP\}/g, 	// ${SEP}...${/SEP}
-		rxComments = /\{\{\![\w\W]*?\}\}/g,		// {{!...}}
+		rxComments = /\{\{\!\-\-[\w\W]*?\-\-\}\}/g,	// {{!--...--}}
 		rxBraces = /\{\{([\w\W]+?)\}\}/g,		// {{...}}
 		rxNot = /\$\{([\^])([\w\W]+?)\}(.+?)\$\{\/\2/g,	// ${^ ...}...${$1}
 		rxIf = /\$\{([#])([\w\W]+?)\}(.+?)\$\{\/\2/g,	// ${# ...}...${$1}
@@ -26,6 +26,7 @@ var nostache=(function() {
 		.replace(rxIf, "${$2?\"$3\":''") // condense IF block into template expression
 		.replace(rxLoop, function(j,k,a,b){return "${("+a+").map((a,b,c)=>_tmp.call(this,"+JSON.stringify(b)+",a,b,true,c),this).join('')";}) // condense loop block into template expression
 		.replace(rxCarrot, "${ob}") // turn carrot marker into template expression
+		junk=console.log(ss),
 		rez = Function("_tmp, ob", "try{with(ob)return `" + ss + "`}catch(y){return  y.constructor.name + '::' + y.message;}");
 
 		// if internally called, return composited  string using context (not whole data):
