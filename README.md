@@ -10,7 +10,7 @@ strOutput=fn(object);`
 `strOutput=nostache(strTemplate, object);`
 
 #### (a string template, object of data, and object of partials/imports) :
-`strOutput=nostache(strTemplate, objData, objPartials);`
+`strOutput=nostache(strTemplate, objData/null, objPartials);` Pass null to get a function, data to get a rendered string.
 
 ## Features
 
