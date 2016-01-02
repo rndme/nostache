@@ -35,15 +35,15 @@ Pass two arguments ( a string template and an object of data) to invoke immediat
 ## Features
 
 ### Injection
-`{{name}}`
-
+`{{name}}` | `{{root.branch.sub.name.prop}}` | `{{user['name']}}` | `{{name.bold()}}`  <br />
+Inserts the value of the named path. Unlike Mustache, you can use bracket notation and invoke methods inline, even passing arguments to methods via primitives or _imports_.
 
 ### Imports
 `{{>name}}`
-
+Imports use the same syntax, but work slightly differently than Mustache's partials. Whereas Mustache partials are executed in-flow and with surrounding context, Nostache imports run globally just prior to templating. Global (flat) processing executes much faster than Mustache's, but also means that Nostache imports cannot import other imports. All imported values should be directed properties of the _partials_ object (no nested sub-objects). You can omit the _partials_ object at call-time, which triggers import resolution to look at the _this_ object instead, which allows a handy way to bind() a set of resources to a rendering function. As they execute, imports simply replace literal text, with no consideration of context or validity. This is a good thing because you can inject template code, and it will get executed as though it were hard-coded, providing a macro-like stage of code execution.
 
 ### Conditionals
-`{{#total>0}}` or NOT: `{{^total>0}}`
+`{{#total>0}}` | `{{^total>0}}`
 
 
 ### Looping
