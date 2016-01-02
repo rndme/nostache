@@ -1,5 +1,5 @@
 # nostache
-## a mustache.js "clone" with a MUCH smaller core using ES6 template strings as a core
+## mustache.js-like templates w/ a tiny ES6 core
 
 ## usages
 Pass one argument (a string template) to return a function that returns an HTML string when passed an object:
@@ -30,3 +30,36 @@ Pass two arguments ( a string template and an object of data) to invoke immediat
 * long paths work in comparing conditionals  `{{#sec.a.length==3}}`
 * any expression can compare, not just equals  `{{#sec.a.length>3}}` or, conversely  `{{^sec.a.length>3}}`
 * razor mode is auto-activated, special `{{@@}}` token not needed
+
+
+## Features
+
+### Injection
+`{{name}}`
+
+
+### Imports
+`{{>name}}`
+
+
+### Conditionals
+`{{#total>0}}` or NOT: `{{^total>0}}`
+
+
+### Looping
+`{{.users}}`
+
+
+### Razor Syntax
+`@lname, #fname`
+
+
+
+
+
+
+
+
+
+
+
