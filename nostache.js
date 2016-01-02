@@ -26,7 +26,7 @@ var nostache=(function() {
 		.replace(rxIf, "${$2?\"$3\":''") // condense IF block into template expression
 		.replace(rxLoop, function(j,k,a,b){return "${("+a+").map((a,b,c)=>_tmp.call(this,"+JSON.stringify(b)+",a,b,true,c),this).join('')";}) // condense loop block into template expression
 		.replace(rxCarrot, "${ob}"), // turn carrot marker into template expression
-		rez = Function("_tmp, ob", "try{with(ob)return `" + ss + "`}catch(y){return  y.constructor.name + '::' + y.message;}");
+		rez = Function("_tmp, ob", "with(ob)return `" + ss + "`;");
 
 		// if internally called, return composited  string using context (not whole data):
 		if(inner) return rez.call(this, _tmp, ob);
