@@ -1,4 +1,4 @@
-// nostache.js by dandavis [CCBY4]
+// nostache.js by dandavis [CCBY4]  https://github.com/rndme/nostache
 var nostache=(function() {
   // define the syntax of the templates as RegExps:		approximation/eg
 	var rxImports = /\{\{>([\w\W]+?)\}\}/g,			// {{>...}}
