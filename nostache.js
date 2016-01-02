@@ -1,16 +1,16 @@
 // nostache.js by dandavis [CCBY4]
 var nostache=(function() {
-  // define the syntax of the templates as RegExps:
-	var rxImports = /\{\{>([^}]+)\}\}/g,			// {{>...}}
+  // define the syntax of the templates as RegExps:			approximation/eg/note
+	var rxImports = /\{\{>([\w\W]+?)\}\}/g,			// {{>...}}
 		rxIndex = /\$\{INDEX\}/g, 			// ${INDEX}
 		rxRazor=/(\W)@([#\^!\/\|\.\)\(]?[\w\.$|]+)/g,	// @[#^!/.)(]*ab.c
-		rxElse = /\{\{\!([\w\.]+)\}\}/g,			// {{!abc}}
-		rxSep = /\$\{SEP\}([^$]+)\$\{\/SEP\}/g, 		// ${SEP}...${/SEP}
-		rxComments = /\{\{\![^}]*\}\}/g,			// {{!...}}
-		rxBraces = /\{\{([^\}]+)\}\}/g,			// {{...}}
-		rxNot = /\$\{([\^])([^}]+)\}(.+?)\$\{\/\2/g,	// ${^...}		
-		rxIf = /\$\{([#])([^}]+)\}(.+?)\$\{\/\2/g,	// ${#...}
-		rxLoop = /([\.])([^}]+)\}([\w\W]+?)\$\{\/\2/g,	// ?????
+		rxElse = /\{\{\!([\w\.]+)\}\}/g,			// {{!abc}} -simple conditional else
+		rxSep = /\$\{SEP\}([\w\W]+?)\$\{\/SEP\}/g, 		// ${SEP}...${/SEP}
+		rxComments = /\{\{\![\w\W]*?\}\}/g,			// {{!...}}
+		rxBraces = /\{\{([\w\W]+?)\}\}/g,			// {{...}}
+		rxNot = /\$\{([\^])([\w\W]+?)\}(.+?)\$\{\/\2/g,	// ${^ ...}...${$1}
+		rxIf = /\$\{([#])([\w\W]+?)\}(.+?)\$\{\/\2/g,	// ${# ...}...${$1}
+		rxLoop = /\$\{([\.])([\w\W]+?)\}([\w\W]+?)\$\{\/\2/g,	// ${. ...}...${$1}
 		rxCarrot = /\$\{\.\}/g;	// ${.}
 
   	// the internal string to ES6 converter and executer, psuedo-recursive on loops
@@ -24,7 +24,7 @@ var nostache=(function() {
 		.replace(rxBraces, "${$1}") // turn brace expressions into template string literals
 		.replace(rxNot, "${!($2)?\"$3\":''") // condense NOT block into template expression
 		.replace(rxIf, "${$2?\"$3\":''") // condense IF block into template expression
-		.replace(rxLoop, function(j,k,a,b){return "("+a+").map((a,b,c)=>_tmp.call(this,"+JSON.stringify(b)+",a,b,true,c),this).join('')";}) // condense loop block into template expression
+		.replace(rxLoop, function(j,k,a,b){return "${("+a+").map((a,b,c)=>_tmp.call(this,"+JSON.stringify(b)+",a,b,true,c),this).join('')";}) // condense loop block into template expression
 		.replace(rxCarrot, "${ob}") // turn carrot marker into template expression
 		junk=console.log(ss),
 		rez = Function("_tmp, ob", "try{with(ob)return `" + ss + "`}catch(y){return  y.constructor.name + '::' + y.message;}");
