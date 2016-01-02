@@ -10,14 +10,17 @@ To get all geeky: A RegExp-based 1-pass top-down transpiler (with imports) const
 
 ## Usage
 #### (a string template) to return a function that returns an HTML string when passed an object: <br />
-`fn=nostache(strTemplate); 
-strOutput=fn(object);`
+```
+var fnRender = nostache(strTemplate),
+strOutput = fnRender(objData);
+````
 
 #### (a string template and object of data) to invoke immediately:<br />
 `strOutput=nostache(strTemplate, object);`
 
 #### (a string template, object of data, and object of partials/imports) :
-`strOutput=nostache(strTemplate, objData/null, objPartials);` Pass null to get a function, data to get a rendered string.
+`strOutput = nostache(strTemplate, objData, objPartials);` <br />
+` fnRender = nostache(strTemplate, null, objPartials);` 
 
 
 ## Syntax Features
