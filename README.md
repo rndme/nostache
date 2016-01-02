@@ -36,8 +36,8 @@ This is a big piece of functionality missing from Mustache.js, and can be quite 
 
 
 ### Razor Syntax
-`@lname, @fname` | ` @#users  @INDEX: @name  @/users`
-"Inspired" by MS's VS/MVC razor templates, this alternative syntax can keep visual boilerplate costs down. You can use it for injection, looping, and conditionals, but the allowed characters are more restricted that the traditional `{{}}` delimiters, so it's not the best choice for conplex logic. Lastly, it avoids mistaking email addresses for tokens by insisting upon a non-wordy char to the left of the `@`.
+`@lname, @fname` | ` @#users  @INDEX: @name  @/users` <br />
+"Inspired" by MS's VS/MVC razor templates, this alternative syntax can keep visual boilerplate costs down. You can use it for injection, looping, and conditionals, but the allowed characters are more restricted that the traditional `{{}}` delimiters (`\w\.$|`) , so it's not the best choice for complex logic. Lastly, it avoids mistaking email addresses for tokens by insisting upon a non-wordy char to the left of the `@`.
 
 
 ### {{INDEX}}
