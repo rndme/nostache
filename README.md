@@ -35,8 +35,8 @@ Pass two arguments ( a string template and an object of data) to invoke immediat
 ## Features
 
 ### Injection
-`{{name}}` | `{{root.branch.sub.name.prop}}` | `{{user['name']}}` | `{{name.bold()}}`  <br />
-Inserts the value of the named path. Unlike Mustache, you can use bracket notation and invoke methods inline, even passing arguments to methods via primitives or _imports_. You can reach not only in-scope variables, but globals like `Math.random()` as well. Also keep in mind that you can use ES6 template strings to inject dynamic values into the template before it executes.
+`{{name}}` | `{{root.branch.sub.name.prop}}` | `{{user['name']}}` | `{{name.bold()}}` | `{{++this['total'] * 10 }}` <br />
+Inserts the value of the named path. Unlike Mustache, you can use bracket notation and invoke methods inline, even passing arguments to methods via primitives or early-run _imports_. You can perform calculations mid-expression using virtually any valid javascript expression. You can reach not only in-scope variables, but globals like `Math.random()` as well. Also keep in mind that you can use ES6 template strings to inject dynamic values into the template before it executes.
 
 ### Imports
 `{{>name}}`
@@ -45,6 +45,9 @@ Imports use the same syntax, but work slightly differently than Mustache's parti
 
 ### Looping
 `{{.users}}`
+Loops Traverse data Arrays and repeat their content for each element in the Array.
+Due to the simplicity of the engine, there is on one restriction on nested looping: you cannont have a duplicated property name iterated on different nested levels; eg. `{users:{users:[1,2,3]}}` is no good.
+
 
 ### Conditionals
 `{{#total>0}}` | `{{^total>0}}`
