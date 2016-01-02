@@ -2,14 +2,14 @@
 var nostache=(function() {
   // define the syntax of the templates as RegExps:
 	var rxImports = /\{\{>([^}]+)\}\}/g,			// {{>...}}
-		rxIndex = /\$\{INDEX\}/g, 				// ${INDEX}
+		rxIndex = /\$\{INDEX\}/g, 			// ${INDEX}
 		rxRazor=/(\W)@([#\^!\/\|\.\)\(]?[\w\.$|]+)/g,	// @[#^!/.)(]*ab.c
-		rxElse = /\{\{\!([\w\.]+)\}\}/g,		//	{{!abc}}
+		rxElse = /\{\{\!([\w\.]+)\}\}/g,		// {{!abc}}
 		rxSep = /\$\{SEP\}([^$]+)\$\{\/SEP\}/g, // ${SEP}...${/SEP}
 		rxComments = /\{\{\![^}]*\}\}/g,		// {{!...}}
 		rxBraces = /\{\{([^\}]+)\}\}/g,			// {{...}}
 		rxNot = /\$\{([\^])([^}]+)\}(.+?)\$\{\/\2/g,	// ${^...}		
-		rxIf = /\$\{([#])([^}]+)\}(.+?)\$\{\/\2/g,		// ${#...}
+		rxIf = /\$\{([#])([^}]+)\}(.+?)\$\{\/\2/g,	// ${#...}
 		rxLoop = /([\.])([^}]+)\}([\w\W]+?)\$\{\/\2/g,	// ?????
 		rxCarrot = /\$\{\.\}/g;	// ${.}
 
