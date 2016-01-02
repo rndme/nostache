@@ -2,7 +2,8 @@
 ### mustache.js-like templates w/ a tiny ES6 core
 
 ## Design
-A pre-compile-able 1kb engine that does what mustache does, and with extra declartive-view features.
+A pre-compile-able 1kb engine that does what mustache does, and with extra declartive-view features. <br />
+To get all geeky: A RegExp-based 1-pass top-down transpiler (with imports) constructs a JIT ES6 template string that evaluates the embeded exressions. The only late-run code is for looping and `{{INDEX}}` expressions, everything else is pure string processing, which makes it easy to reason about and fork for customized applications.
 
 
 
@@ -18,7 +19,7 @@ strOutput=fn(object);`
 `strOutput=nostache(strTemplate, objData/null, objPartials);` Pass null to get a function, data to get a rendered string.
 
 
-## Features
+## Syntax Features
 
 ### Injection
 `{{name}}` | `{{root.branch.sub.name.prop}}` | `{{user['name']}}` | `{{name.bold()}}` | `{{++this['total'] * 10 }}` <br />
