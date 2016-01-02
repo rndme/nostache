@@ -1,7 +1,12 @@
 # nostache
-## mustache.js-like templates w/ a tiny ES6 core
+### mustache.js-like templates w/ a tiny ES6 core
 
-## usages
+## Design
+A pre-compile-able 1kb engine that does what mustache does, and with extra declartive-view features.
+
+
+
+## Usage
 #### (a string template) to return a function that returns an HTML string when passed an object: <br />
 `fn=nostache(strTemplate); 
 strOutput=fn(object);`
@@ -11,6 +16,7 @@ strOutput=fn(object);`
 
 #### (a string template, object of data, and object of partials/imports) :
 `strOutput=nostache(strTemplate, objData/null, objPartials);` Pass null to get a function, data to get a rendered string.
+
 
 ## Features
 
