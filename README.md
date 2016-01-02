@@ -9,7 +9,7 @@ strOutput=fn(object);`
 #### (a string template and object of data) to invoke immediately:<br />
 `strOutput=nostache(strTemplate, object);`
 
-#### Pass Three arguments to use a collection of partials. Pass null for data to get a render function.
+#### (a string template, object of data, and object of partials/imports) :
 `strOutput=nostache(strTemplate, objData, objPartials);`
 
 ## Features
