@@ -2,19 +2,15 @@
 ## mustache.js-like templates w/ a tiny ES6 core
 
 ## usages
-#### Pass one argument (a string template) to return a function that returns an HTML string when passed an object: <br />
+#### (a string template) to return a function that returns an HTML string when passed an object: <br />
 `fn=nostache(strTemplate); 
 strOutput=fn(object);`
 
-#### Pass two arguments ( a string template and an object of data) to invoke immediately:<br />
+#### (a string template and object of data) to invoke immediately:<br />
 `strOutput=nostache(strTemplate, object);`
 
-
-#### Pass Three arguments to use a collection of partials. You can pass null for data to get a render function.
-
-## differences from core mustache:
- `{{#name}}` is always a conditional, use `{{.name}}` to iterate arrays
-
+#### Pass Three arguments to use a collection of partials. Pass null for data to get a render function.
+`strOutput=nostache(strTemplate, objData, objPartials);`
 
 ## Features
 
