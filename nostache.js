@@ -1,13 +1,13 @@
 // nostache.js by dandavis [CCBY4]
 var nostache=(function() {
-  // define the syntax of the templates as RegExps:			approximation/eg/note
+  // define the syntax of the templates as RegExps:		approximation/eg/note
 	var rxImports = /\{\{>([\w\W]+?)\}\}/g,			// {{>...}}
 		rxIndex = /\$\{INDEX\}/g, 			// ${INDEX}
 		rxRazor=/(\W)@([#\^!\/\|\.\)\(]?[\w\.$|]+)/g,	// @[#^!/.)(]*ab.c
 		rxElse = /\{\{\!([\w\.]+)\}\}/g,			// {{!abc}} -simple conditional else
-		rxSep = /\$\{SEP\}([\w\W]+?)\$\{\/SEP\}/g, 		// ${SEP}...${/SEP}
-		rxComments = /\{\{\![\w\W]*?\}\}/g,			// {{!...}}
-		rxBraces = /\{\{([\w\W]+?)\}\}/g,			// {{...}}
+		rxSep = /\$\{SEP\}([\w\W]+?)\$\{\/SEP\}/g, 	// ${SEP}...${/SEP}
+		rxComments = /\{\{\![\w\W]*?\}\}/g,		// {{!...}}
+		rxBraces = /\{\{([\w\W]+?)\}\}/g,		// {{...}}
 		rxNot = /\$\{([\^])([\w\W]+?)\}(.+?)\$\{\/\2/g,	// ${^ ...}...${$1}
 		rxIf = /\$\{([#])([\w\W]+?)\}(.+?)\$\{\/\2/g,	// ${# ...}...${$1}
 		rxLoop = /\$\{([\.])([\w\W]+?)\}([\w\W]+?)\$\{\/\2/g,	// ${. ...}...${$1}
