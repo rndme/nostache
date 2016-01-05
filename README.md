@@ -18,9 +18,9 @@ strOutput = fnRender(objData);
 #### (a string template and object of data) to invoke immediately:<br />
 `strOutput=nostache(strTemplate, object);`
 
-#### (a string template, object of data, and object of partials/imports) :
-`strOutput = nostache(strTemplate, objData, objPartials);` <br />
-` fnRender = nostache(strTemplate, null, objPartials);` 
+#### (a string template, object of data, and object of imports/imports) :
+`strOutput = nostache(strTemplate, objData, objImports);` <br />
+`fnRender = nostache(strTemplate, null, objImports);` 
 
 
 ## Syntax Features
@@ -31,7 +31,7 @@ Inserts the value of the named path. Unlike Mustache, you can use bracket notati
 
 ### Imports
 `{{>name}}` <br />
-Imports use the same syntax, but work slightly differently than Mustache's partials. Whereas Mustache partials are executed in-flow and with surrounding context, Nostache imports run globally just prior to templating. Global (flat) processing executes much faster than Mustache's, but also means that Nostache imports cannot import other imports. All imported values should be directed properties of the _partials_ object (no nested sub-objects). You can omit the _partials_ object at call-time, which triggers import resolution to look at the _this_ object instead, which allows a handy way to bind() a set of resources to a rendering function. As they execute, imports simply replace literal text, with no consideration of context or validity. This is a good thing because you can inject template code, and it will get executed as though it were hard-coded, providing a macro-like stage of code execution.
+Imports use the same syntax, but work slightly differently than Mustache's partials. Whereas Mustache partials are executed in-flow and with surrounding context, Nostache imports run globally just prior to templating. Global (flat) processing executes much faster than Mustache's, but also means that Nostache imports cannot import other imports. All imported values should be directed properties of the _imports_ object (no nested sub-objects). You can omit the _imports_ object at call-time, which triggers import resolution to look at the _this_ object instead, which allows a handy way to bind() a set of resources to a rendering function. As they execute, imports simply replace literal text, with no consideration of context or validity. This is a good thing because you can inject template code, and it will get executed as though it were hard-coded, providing a macro-like stage of code execution.
 
 
 ### Looping
