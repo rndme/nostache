@@ -37,9 +37,9 @@ var nostache=(function() {
 
     return function tmp(strTemplate, data, imports){	// the nostache function, accepts a string, data, and imports
 		// define imports from explictly-passed object, _this_, or a blank object
-		var partials= imports || this || {};
+		var _imports= imports || this || {};
 		// run imports by replacing tokens with values from the imports object:
-		strTemplate=strTemplate.replace(rxImports, function(j,p){ return partials[p]; });
+		strTemplate=strTemplate.replace(rxImports, function(j,p){ return _imports[p]; });
 		
 		return data ? // return a render function, or if given data also, a composited string result:
 			_tmp.call(this, strTemplate).call(this, data) : 
