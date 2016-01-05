@@ -28,6 +28,13 @@ strOutput = fnRender(objData);
 ### Injection
 `{{name}}` | `{{root.branch.sub.name.prop}}` | `{{user['name']}}` | `{{name.bold()}}` | `{{++this['total'] * 10 }}` <br />
 Inserts the value of the named path. Unlike Mustache, you can use bracket notation and invoke methods inline, even passing arguments to methods via primitives or early-run _imports_. You can perform calculations mid-expression using virtually any valid javascript expression. You can reach not only in-scope variables, but globals like `Math.random()` as well. Also keep in mind that you can use ES6 template strings to inject dynamic values into the template before it executes.
+<br /> ex: `nostache("Hello {{name}}", {name: "Fred"}) == "Hello Fred";`
+<br /> ex: `nostache("Hello <b>{{name}}</b>", {name:"Fred"}) == "Hello <b>Fred</b>";`
+<br /> ex: `nostache("Hello {{name}}", {name:"Fred".bold()}) == "Hello <b>Fred</b>";`
+<br /> ex: `nostache("Hello {{name.bold()}}", {name:"Fred"}) == "Hello <b>Fred</b>";`
+<br /> ex: `nostache("Random Number: {{1/Math.random()}}", {});`
+
+
 
 ### Imports
 `{{>name}}` <br />
@@ -38,7 +45,9 @@ Imports use the same syntax, but work slightly differently than Mustache's parti
 `{{.users}}` <br />
 Loops Traverse data Arrays and repeat their content for each element in the Array.
 Due to the simplicity of the engine, there is on one restriction on nested looping: you cannont have a duplicated property name iterated on different nested levels; eg. `{users:{users:[1,2,3]}}` is no good.
-
+<br /> ex: ` nostache("{{.numbers}}#{{/numbers}}", {numbers:[11,22,33]})== "###"; `
+<br /> ex: ` nostache("{{.numbers}}{{.}} {{/numbers}}", {numbers:[11,22,33]}) =="11 22 33 "; `
+<br /> ex: ` nostache("{{.numbers}}{{INDEX}}:{{.}} {{/numbers}}", {numbers:[11,22,33]}) =="1:11 2:22 3:33 "; `
 
 ### Conditionals
 `{{#total>0}}` | `{{^total>0}}` | `{{#section=="home"}}` <br />
