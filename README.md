@@ -60,7 +60,7 @@ This is a big piece of functionality missing from Mustache.js, and can be quite 
 <br /> ex: ` nostache("i is {{#i > 5}}big{{/i > 5}}{{#i<6}}small{{/i<6}}", {i: 9}) == "i is big"; `
 
 ### {{!path}} else syntax
-`{{!path}}` turns into `{{/path}}{{^path}}`, for simpler _else_ handling of regular mustache conditionals. <br />
+`{{!path}}` turns into `{{/path}}{{^path}}`, for simpler _else_ handling of regular mustache conditionals.
 <br /> ex: ` nostache("{{#i}}yes{{!i}}no{{/i}}", {i: 9}) == "yes"; `
 <br /> ex: ` nostache("{{#i}}yes{{!i}}no{{/i}}", {i: 0}) == "no"; `
     
@@ -70,7 +70,6 @@ This is a big piece of functionality missing from Mustache.js, and can be quite 
 ### Razor Syntax
 `@lname, @fname` | ` @#users  @INDEX: @name  @/users` <br />
 "Inspired" by MS's VS/MVC razor templates, this alternative syntax can keep visual boilerplate costs down. You can use it for injection, looping, and conditionals, but the allowed characters are more restricted that the traditional `{{}}` delimiters (`\w\.$|`) , so it's not the best choice for complex logic. Lastly, it avoids mistaking email addresses for tokens by insisting upon a non-wordy char to the left of the `@`.
-
 <br /> ex: ` nostache("Hello @name", {name: "Fred"}) == "Hello Fred"; `
 <br /> ex: ` nostache("Chars: @name.length", {name: "Fred"}) == "Chars: 4"; `
 <br /> ex: ` nostache("Hello @user.name", { user: {name: "Fred"} }) == "Hello Fred"; `
