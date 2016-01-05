@@ -16,17 +16,19 @@ var nostache=(function() {
   	// the internal string to ES6 converter and executer, psuedo-recursive on loops
 	function _tmp(s, ob, index, inner, c) {
 		var z, ss = s
-		.replace(rxIndex, index + 1) // turn INDEX keyword into numeric literal
-		.replace(rxRazor, "$1{{$2}}") // convert Razor to normal syntax
-		.replace(rxElse, "{{/$1}}{{^$1}}") // turn ELSE expressions into conditional syntax
-		.replace(rxSep, c&&(index<c.length-1)?"$1":"")
-		.replace(rxComments, "") // strip comment blocks
-		.replace(rxBraces, "${$1}") // turn brace expressions into template string literals
-		.replace(rxNot, "${!($2)?\"$3\":''") // condense NOT block into template expression
-		.replace(rxIf, "${$2?\"$3\":''") // condense IF block into template expression
-		.replace(rxLoop, function(j,k,a,b){return "${("+a+").map((a,b,c)=>_tmp.call(this,"+JSON.stringify(b)+",a,b,true,c),this).join('')";}) // condense loop block into template expression
-		.replace(rxCarrot, "${ob}"), // turn carrot marker into template expression
-		rez = Function("_tmp, ob", "with(ob)return `" + ss + "`;");
+		.replace(rxIndex, index + 1) 			// turn INDEX keyword into numeric literal
+		.replace(rxRazor, "$1{{$2}}") 			// convert Razor to normal syntax
+		.replace(rxElse, "{{/$1}}{{^$1}}") 		// turn ELSE expressions into conditional syntax
+		.replace(rxSep, c&&(index<c.length-1)?"$1":"")	// replace SEP mini-sections with contents, or nothing of last
+		.replace(rxComments, "") 			// strip comment blocks
+		.replace(rxBraces, "${$1}")			// turn brace expressions into template string literals
+		.replace(rxNot, "${!($2)?\"$3\":''")		// condense NOT block into template expression
+		.replace(rxIf, "${$2?\"$3\":''")		// condense IF block into template expression
+		.replace(rxLoop, function(j,k,a,b){ 		// condense loop block into template expression:
+			return "${("+a+").map((a,b,c)=>_tmp.call(this,"+JSON.stringify(b)+",a,b,true,c),this).join('')";
+		}) 
+		.replace(rxCarrot, "${ob}"),			// turn carrot marker into template expression
+		rez = Function("_tmp, ob", "with(ob)return `" + ss + "`;");	// build string output renderer function
 
 		// if internally called, return composited  string using context (not whole data):
 		if(inner) return rez.call(this, _tmp, ob);
