@@ -50,12 +50,21 @@ Due to the simplicity of the engine, there is on one restriction on nested loopi
 <br /> ex: ` nostache("{{.numbers}}{{.}}{{SEP}}, {{/SEP}}{{/numbers}}", {numbers:[11,22,33]}) == "11, 22, 33"; `
 <br /> ex: ` nostache("{{.numbers}}{{INDEX}}:{{.}} {{/numbers}}", {numbers:[11,22,33]}) == "1:11 2:22 3:33 "; `
 <br /> ex: ` nostache("{{.numbers}}{{INDEX}}:{{.}}{{SEP}}, {{/SEP}}{{/numbers}}", {numbers:[11,22,33]}) == "1:11, 2:22, 3:33" `
-<br /> ex: ` nostache("{{.numbers}}{{ (i%2) ? i : ''}} {{/numbers}}", {numbers:[{i:11},{i:22},{i:33}]}) == "11  33 "; `
+<br /> ex: ` nostache("{{.numbers}}{{ (i%2) ? i : ''}}{{/numbers}}", {numbers:[{i:11},{i:22},{i:33}]}) == "1133"; `
 
 
 ### Conditionals
 `{{#total>0}}` | `{{^total>0}}` | `{{#section=="home"}}` <br />
 This is a big piece of functionality missing from Mustache.js, and can be quite helpful when constructing views. If the expression returns falsy, the contents are ommited. If the expression is truthy, the contents are included/executed. This can help add "active" classes to navigation and show/hide sections content according to task/location/time/etc. Logic in the template allow declarative view definition and eliminates the need for DOM-binding to achieve view updates.
+<br /> ex: ` nostache("i is {{#i > 5}}big{{/i > 5}}{{#i<6}}small{{/i<6}}", {i: 2}) == "i is small"; `
+<br /> ex: ` nostache("i is {{#i > 5}}big{{/i > 5}}{{#i<6}}small{{/i<6}}", {i: 9}) == "i is big"; `
+
+### {{!path}} else syntax
+`{{!path}}` turns into `{{/path}}{{^path}}`, for simpler _else_ handling of regular mustache conditionals. <br />
+<br /> ex: ` nostache("{{#i}}yes{{!i}}no{{/i}}", {i: 9}) == "yes"; `
+<br /> ex: ` nostache("{{#i}}yes{{!i}}no{{/i}}", {i: 0}) == "no"; `
+    
+    
 
 
 ### Razor Syntax
@@ -73,10 +82,6 @@ This is a big piece of functionality missing from Mustache.js, and can be quite 
     `{{SEP}} <br /> {{/SEP}}` |  `{{SEP}}, {{/SEP}}`
 
 
-### {{!path}} else syntax
-  `{{!path}}` turns into `{{/path}}{{^path}}`, for simpler _else_ handling. <br />
-    `<p>{{#ok}}Y{{!ok}}N{{/ok}}</p>` == `<p>{{#ok}}Y{{/ok}}{{^ok}}N{{/ok}}</p>`
-    
 
 
 
