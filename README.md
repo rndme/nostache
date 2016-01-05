@@ -71,6 +71,11 @@ This is a big piece of functionality missing from Mustache.js, and can be quite 
 `@lname, @fname` | ` @#users  @INDEX: @name  @/users` <br />
 "Inspired" by MS's VS/MVC razor templates, this alternative syntax can keep visual boilerplate costs down. You can use it for injection, looping, and conditionals, but the allowed characters are more restricted that the traditional `{{}}` delimiters (`\w\.$|`) , so it's not the best choice for complex logic. Lastly, it avoids mistaking email addresses for tokens by insisting upon a non-wordy char to the left of the `@`.
 
+<br /> ex: ` nostache("Hello @name", {name: "Fred"}) == "Hello Fred"; `
+<br /> ex: ` nostache("Chars: @name.length", {name: "Fred"}) == "Chars: 4"; `
+<br /> ex: ` nostache("Hello @user.name", { user: {name: "Fred"} }) == "Hello Fred"; `
+
+
 
 ### {{INDEX}}
   Simple "contstant" that returns the current index when iterating an Array.  <br />
