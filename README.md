@@ -78,13 +78,12 @@ This is a big piece of functionality missing from Mustache.js, and can be quite 
 
 ### {{INDEX}}
   Simple "contstant" that returns the current index when iterating an Array.  <br />
-    `{{#persons}}<li> #{{INDEX}}. {{firstName}} {{lastName}} </li> {{/persons}}`
+<br /> ex: ` nostache("{{.numbers}}{{INDEX}}:{{.}} {{/numbers}}", {numbers:[11,22,33]}) == "1:11 2:22 3:33 "; `
 
 
 ### {{SEP}} mini-section
-   Simple "constant" that returns the enclosed block for every value except for the last. <br />
-    `{{SEP}} <br /> {{/SEP}}` |  `{{SEP}}, {{/SEP}}`
-
+   Simple "constant" that returns the enclosed block for every value except for the last. 
+<br /> ex: ` nostache("{{.numbers}}{{.}}{{SEP}}, {{/SEP}}{{/numbers}}", {numbers:[11,22,33]}) == "11, 22, 33"; `
 
 
 
