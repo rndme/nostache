@@ -1,6 +1,6 @@
 // nostache.js by dandavis [CCBY4]  https://github.com/rndme/nostache
 var nostache=(function() {
-  // define the syntax of the templates as RegExps:		approximation/eg
+  // define syntax of the templates as RegExps:			approximation/eg
 	var rxImports = /\{\{>([\w\W]+?)\}\}/g,			// {{>...}}
 		rxIndex = /\$\{INDEX\}/g, 			// ${INDEX}
 		rxRazor=/(\W)@([#\^!\/\|\.\)\(]?[\w\.$|]+)/g,	// @[#^!/.)(]*ab.c
@@ -13,9 +13,8 @@ var nostache=(function() {
 		rxLoop = /\$\{([\.])([\w\W]+?)\}([\w\W]+?)\$\{\/\2/g,	// ${. ...}...${$1}
 		rxCarrot = /\$\{\.\}/g;	// ${.}
 
-  	// the internal string to ES6 converter and executer, psuedo-recursive on loops
-	function _tmp(s, ob, index, inner, c) {
-		var z, ss = s
+	function _tmp(s, ob, index, inner, c) {			// string to ES6 converter/executer
+		var ss = s					// string FunctionBody of the dynamic rednerer
 		.replace(rxIndex, index + 1) 			// turn INDEX keyword into numeric literal
 		.replace(rxRazor, "$1{{$2}}") 			// convert Razor to normal syntax
 		.replace(rxElse, "{{/$1}}{{^$1}}") 		// turn ELSE expressions into conditional syntax
@@ -32,7 +31,7 @@ var nostache=(function() {
 
 		// if internally called, return composited  string using context (not whole data):
 		if(inner) return rez.call(this, _tmp, ob);
-	  
+
 		// return a render function bound to the template internal renderer:
 		return function(data) {	return rez.call(this, _tmp, data);};
 	}
