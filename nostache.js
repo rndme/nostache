@@ -22,7 +22,7 @@ var nostache=(function() {
 		.replace(rxComments, "") 			// strip comment blocks
 		.replace(rxBraces, "${$1}")			// turn brace expressions into template string literals
 		.replace(rxNot, "${!($2)?\"$3\":''")		// condense NOT block into template expression
-		.replace(rxIf, "${$2?\"$3\":''")		// condense IF block into template expression
+		.replace(rxIf, "${$2?\"$3\":''")			// condense IF block into template expression
 		.replace(rxLoop, function(j,k,a,b){ 		// condense loop block into template expression:
 			return "${("+a+").map((a,b,c)=>_tmp.call(this,"+JSON.stringify(b)+",a,b,true,c),this).join('')";
 		}) 
