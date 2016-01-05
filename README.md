@@ -45,9 +45,13 @@ Imports use the same syntax, but work slightly differently than Mustache's parti
 `{{.users}}` <br />
 Loops Traverse data Arrays and repeat their content for each element in the Array.
 Due to the simplicity of the engine, there is on one restriction on nested looping: you cannont have a duplicated property name iterated on different nested levels; eg. `{users:{users:[1,2,3]}}` is no good.
-<br /> ex: ` nostache("{{.numbers}}#{{/numbers}}", {numbers:[11,22,33]})== "###"; `
-<br /> ex: ` nostache("{{.numbers}}{{.}} {{/numbers}}", {numbers:[11,22,33]}) =="11 22 33 "; `
-<br /> ex: ` nostache("{{.numbers}}{{INDEX}}:{{.}} {{/numbers}}", {numbers:[11,22,33]}) =="1:11 2:22 3:33 "; `
+<br /> ex: ` nostache("{{.numbers}}#{{/numbers}}", {numbers:[11,22,33]}) == "###"; `
+<br /> ex: ` nostache("{{.numbers}}{{.}} {{/numbers}}", {numbers:[11,22,33]}) == "11 22 33 "; `
+<br /> ex: ` nostache("{{.numbers}}{{.}}{{SEP}}, {{/SEP}}{{/numbers}}", {numbers:[11,22,33]}) == "11, 22, 33"; `
+<br /> ex: ` nostache("{{.numbers}}{{INDEX}}:{{.}} {{/numbers}}", {numbers:[11,22,33]}) == "1:11 2:22 3:33 "; `
+<br /> ex: ` nostache("{{.numbers}}{{INDEX}}:{{.}}{{SEP}}, {{/SEP}}{{/numbers}}", {numbers:[11,22,33]}) == "1:11, 2:22, 3:33" `
+<br /> ex: ` nostache("{{.numbers}}{{ (i%2) ? i : ''}} {{/numbers}}", {numbers:[{i:11},{i:22},{i:33}]}) == "11  33 "; `
+
 
 ### Conditionals
 `{{#total>0}}` | `{{^total>0}}` | `{{#section=="home"}}` <br />
