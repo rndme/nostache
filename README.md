@@ -93,8 +93,8 @@ This is a big piece of functionality missing from Mustache.js, and can be quite 
 
 ### {{#obj:key}} object iteration
  Iterates over objects using a placeholder name on the section tag, prefixed by ":". <br />
- Inside the section, the key as a tag will equal the name of the object property's key. <br />
-`{{#a:k}}{{k}}={{.}} {{/a:k}}` turns into `b=1 c=5 ` with `{a:{b:1,c:5}}`
+ Inside the section, the key as a tag will equal the name of the object property's key, and `.` will equal the property value. <br />
+<br /> ex:  `nostache('{{.a:k}}{{k}}: {{.}} {{/a:k}}', {a:{b:1,c:5}}) == "b: 1 c: 5 ";`
 
 
 
