@@ -13,7 +13,7 @@ var nostache=(function() {
 		rxLoop = /\$\{([\.])([\w\W]+?)\}([\w\W]+?)\$\{\/\2/g,	// ${. ...}...${$1}
 		rxCarrot = /\$\{\.\}/g;	// ${.}
 
-	function _tmp(s, ob, index, inner, c) {			// string to ES6 converter/executer
+	function _tmp(s, ob, index, inner, c, data) {		// string to ES6 converter/executer
 		var ss = s					// string FunctionBody of the dynamic rednerer
 		.replace(rxIndex, index + 1) 			// turn INDEX keyword into numeric literal
 		.replace(rxRazor, "$1{{$2}}") 			// convert Razor to normal syntax
@@ -24,7 +24,7 @@ var nostache=(function() {
 		.replace(rxNot, "${!($2)?\"$3\":''")		// condense NOT block into template expression
 		.replace(rxIf, "${$2?\"$3\":''")			// condense IF block into template expression
 		.replace(rxLoop, function(j,k,a,b){ 		// condense loop block into template expression:
-			return "${("+a+").map((a,b,c)=>_tmp.call(this,"+JSON.stringify(b)+",a,b,true,c),this).join('')";
+			return "${("+a+").map((a,b,c)=>_tmp.call(this,"+JSON.stringify(b)+",a,b,true,c,__),this).join('')";
 		}) 
 		.replace(rxCarrot, "${ob}"),			// turn carrot marker into template expression
 		rez = Function("_tmp, ob, __", "with(ob)return `" + ss + "`;");	// build string output renderer function
