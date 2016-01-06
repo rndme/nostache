@@ -31,8 +31,8 @@ var nostache=(function() {
 		.replace(rxCarrot, "${ob}");			// turn carrot marker into template expression
 		
 		var rez = Function("_tmp, ob, __, "+strKey, "with(ob)return `" + strTemplate + "`;");	// build string output renderer function
-		if(blnInnerCall) return rez.call(this, _tmp, objContext, varAllData, strKey);// if internally called, returns composited  string using context (not whole data)
-		return function(data) { return rez.call(this, _tmp, data, data, strKey); }; // returns a render function bound to the template internal renderer
+		if(blnInnerCall) return rez.call(this, _tmp, objContext, varAllData, arrList[numIndex]);// if internally called, returns composited  string using context (not whole data)
+		return function(data) { return rez.call(this, _tmp, data, data); }; // returns a render function bound to the template internal renderer
 	}
 
     return function tmp(strTemplate, data, objImports){	// the nostache function, accepts a string, data, and imports
