@@ -27,13 +27,13 @@ var nostache=(function() {
 			return "${("+a+").map((a,b,c)=>_tmp.call(this,"+JSON.stringify(b)+",a,b,true,c),this).join('')";
 		}) 
 		.replace(rxCarrot, "${ob}"),			// turn carrot marker into template expression
-		rez = Function("_tmp, ob", "with(ob)return `" + ss + "`;");	// build string output renderer function
+		rez = Function("_tmp, ob, __", "with(ob)return `" + ss + "`;");	// build string output renderer function
 
 		// if internally called, return composited  string using context (not whole data):
-		if(inner) return rez.call(this, _tmp, ob);
+		if(inner) return rez.call(this, _tmp, ob, data);
 
 		// return a render function bound to the template internal renderer:
-		return function(data) {	return rez.call(this, _tmp, data);};
+		return function(data) {	return rez.call(this, _tmp, data, data);};
 	}
 
     return function tmp(strTemplate, data, imports){	// the nostache function, accepts a string, data, and imports
