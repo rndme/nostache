@@ -26,7 +26,7 @@ strOutput = fnRender(objData);
 ## Syntax Features
 
 ### Injection
-`{{name}}` | `{{root.branch.sub.name.prop}}` | `{{user['name']}}` | `{{name.bold()}}` | `{{++this['total'] * 10 }}` <br />
+`{{this.name}}` | `@name ` | `{{this.sub.name.prop}}` | `{{this.user['name']}}` | `{{this.name.bold()}}`  <br />
 Inserts the value of the named path. Unlike Mustache, you can use bracket notation and invoke methods inline, even passing arguments to methods via primitives or early-run _imports_. You can perform calculations mid-expression using virtually any valid javascript expression. You can reach not only in-scope variables, but globals like `Math.random()` as well. Also keep in mind that you can use ES6 template strings to inject dynamic values into the template before it executes.
 <br /> ex: `nostache("Hello {{this.name}}", {name: "Fred"}) == "Hello Fred";`
 <br /> ex: `nostache("Hello <b>{{this.name}}</b>", {name:"Fred"}) == "Hello <b>Fred</b>";`
