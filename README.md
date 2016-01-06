@@ -22,6 +22,9 @@ strOutput = fnRender(objData);
 `strOutput = nostache(strTemplate, objData, objImports);` <br />
 `fnRender = nostache(strTemplate, null, objImports);` 
 
+## Compared to Mustache, Handlebars, and Hogan
+Nostache is largely congruent with Mustache/Hogan, with many added features. It's not logic-less (JS expressions can be used mid-template). Nostaches uses {{.arr}} instead of {{#arr}} to avoid ambiguity with conditionals {{#huh}} that require run-time branching. Nostache also needs pure functions, so it uses `this` in front of plain injections (see below). Those injections are also not HTML escaped by default like Mustache. Handlebars shares many capabilities with Nostache, but Nostache syntax is more explict on the closing tags, ex. `{{/title}}{{/comments}}` instead of `{{/if}}{{/each}}`.
+
 
 ## Syntax Features
 
