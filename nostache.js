@@ -10,10 +10,11 @@ var nostache=(function() {
 		rxBraces = /\{\{([\w\W]+?)\}\}/g,		// {{...}}
 		rxNot = /\$\{([\^])([\w\W]+?)\}(.+?)\$\{\/\2/g,	// ${^ ...}...${$1}
 		rxIf = /\$\{([#])([\w\W]+?)\}(.+?)\$\{\/\2/g,	// ${# ...}...${$1}
-		rxLoop = /\$\{([\.])([\w\W]+?)\}([\w\W]+?)\$\{\/\2/g,	// ${. ...}...${$1}
+		rxObj = /\$\{(\.)([\w.]+?):([\w.]+?)\}([\w\W]+?)\$\{\/\2:\3/g,	// ${. ...}...${$1}
+		rxLoop = /\$\{(\.)([\w\W]+?)\}([\w\W]+?)\$\{\/\2/g,	// ${. ...}...${$1}	
 		rxCarrot = /\$\{\.\}/g;	// ${.}
 
-	function _tmp(s, ob, index, inner, c, data) {		// string to ES6 converter/executer
+	function _tmp(s, ob, index, inner, c, data, KEY) {	// string to ES6 converter/executer
 		var ss = s					// string FunctionBody of the dynamic rednerer
 		.replace(rxIndex, index + 1) 			// turn INDEX keyword into numeric literal
 		.replace(rxRazor, "$1{{$2}}") 			// convert Razor to normal syntax
@@ -23,17 +24,20 @@ var nostache=(function() {
 		.replace(rxBraces, "${$1}")			// turn brace expressions into template string literals
 		.replace(rxNot, "${!($2)?\"$3\":''")		// condense NOT block into template expression
 		.replace(rxIf, "${$2?\"$3\":''")			// condense IF block into template expression
+		.replace(rxObj, function(j,k,a,b,c){ 		// condense loop block into template expression:
+			return "${Object.keys("+a+").map(function(a,b,c){return _tmp.call(this,"+JSON.stringify(c)+",this[a]||a,b,true,c,__,"+JSON.stringify(b)+");},ob["+JSON.stringify(a)+"]).join('')";
+		})		
 		.replace(rxLoop, function(j,k,a,b){ 		// condense loop block into template expression:
 			return "${("+a+").map((a,b,c)=>_tmp.call(this,"+JSON.stringify(b)+",a,b,true,c,__),this).join('')";
 		}) 
 		.replace(rxCarrot, "${ob}"),			// turn carrot marker into template expression
-		rez = Function("_tmp, ob, __", "with(ob)return `" + ss + "`;");	// build string output renderer function
+		rez = Function("_tmp, ob, __, "+KEY, "with(ob)return `" + ss + "`;");	// build string output renderer function
 
 		// if internally called, return composited  string using context (not whole data):
-		if(inner) return rez.call(this, _tmp, ob, data);
+		if(inner) return rez.call(this, _tmp, ob, data, KEY);
 
 		// return a render function bound to the template internal renderer:
-		return function(data) {	return rez.call(this, _tmp, data, data);};
+		return function(data) {	return rez.call(this, _tmp, data, data, KEY);};
 	}
 
     return function tmp(strTemplate, data, imports){	// the nostache function, accepts a string, data, and imports
