@@ -59,14 +59,6 @@ This is a big piece of functionality missing from Mustache.js, and can be quite 
 <br /> ex: ` nostache("i is {{#i > 5}}big{{/i > 5}}{{#i<6}}small{{/i<6}}", {i: 2}) == "i is small"; `
 <br /> ex: ` nostache("i is {{#i > 5}}big{{/i > 5}}{{#i<6}}small{{/i<6}}", {i: 9}) == "i is big"; `
 
-### {{!path}} else syntax
-`{{!path}}` turns into `{{/path}}{{^path}}`, for simpler _else_ handling of regular mustache conditionals.
-<br /> ex: ` nostache("{{#i}}yes{{!i}}no{{/i}}", {i: 9}) == "yes"; `
-<br /> ex: ` nostache("{{#i}}yes{{!i}}no{{/i}}", {i: 0}) == "no"; `
-    
-    
-
-
 ### Razor Syntax
 `@lname, @fname` | ` @#users  @INDEX: @name  @/users` <br />
 "Inspired" by MS's VS/MVC razor templates, this alternative syntax can keep visual boilerplate costs down. You can use it for injection, looping, and conditionals, but the allowed characters are more restricted that the traditional `{{}}` delimiters (`\w\.$|`) , so it's not the best choice for complex logic. Lastly, it avoids mistaking email addresses for tokens by insisting upon a non-wordy char to the left of the `@`.
@@ -74,22 +66,22 @@ This is a big piece of functionality missing from Mustache.js, and can be quite 
 <br /> ex: ` nostache("Chars: @name.length", {name: "Fred"}) == "Chars: 4"; `
 <br /> ex: ` nostache("Hello @user.name", { user: {name: "Fred"} }) == "Hello Fred"; `
 
-
-
+### {{!path}} else syntax
+`{{!path}}` turns into `{{/path}}{{^path}}`, for simpler _else_ handling of regular mustache conditionals.
+<br /> ex: ` nostache("{{#i}}yes{{!i}}no{{/i}}", {i: 9}) == "yes"; `
+<br /> ex: ` nostache("{{#i}}yes{{!i}}no{{/i}}", {i: 0}) == "no"; `
+    
 ### {{INDEX}}
-  Simple "contstant" that returns the current index when iterating an Array.  <br />
+  Simple "contstant" that returns the current index when iterating an Array.
 <br /> ex: ` nostache("{{.numbers}}{{INDEX}}:{{.}} {{/numbers}}", {numbers:[11,22,33]}) == "1:11 2:22 3:33 "; `
-
 
 ### {{SEP}} mini-section
    Simple "constant" that returns the enclosed block for every value except for the last. 
 <br /> ex: ` nostache("{{.numbers}}{{.}}{{SEP}}, {{/SEP}}{{/numbers}}", {numbers:[11,22,33]}) == "11, 22, 33"; `
 
-
 ### {{__.key}} root syntax
 `{{__.key}}` reaches _key_ on the data object given to nostache, bypassing local conflicts. 
 <br /> ex:  `nostache('{{.b}}{{a}}|{{__.a}} {{/b}}', {a:123, b:[{a:1}]} ) == "1|123 ";`
-
 
 ### {{.obj:key}} object iteration
  Iterates over objects using a placeholder name on the section tag, prefixed by ":". <br />
