@@ -1,5 +1,3 @@
-  
-
 // nostache.js by dandavis [CCBY4]  https://github.com/rndme/nostache
 var nostache=(function() {
   // define syntax of the templates as RegExps:			approximation/eg
@@ -48,4 +46,3 @@ var nostache=(function() {
 			_tmp(strTemplate) ;
     };
 }());
-  
