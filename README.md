@@ -86,7 +86,7 @@ This is a big piece of functionality missing from Mustache.js, and can be quite 
 <br /> ex: ` nostache("{{.numbers}}{{.}}{{SEP}}, {{/SEP}}{{/numbers}}", {numbers:[11,22,33]}) == "11, 22, 33"; `
 
 
-#### {{__.key}} root syntax
+### {{__.key}} root syntax
 `{{__.key}}` reaches _key_ on the data object given to nostache, bypassing local conflicts. 
 <br /> ex:  `nostache('{{.b}}{{a}}|{{__.a}} {{/b}}', {a:123, b:[{a:1}]} ) == "1|123 ";`
 
