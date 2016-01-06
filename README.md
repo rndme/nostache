@@ -42,6 +42,8 @@ Imports use the same syntax, but work slightly differently than Mustache's parti
 
 
 ### Looping
+
+#### {{.arr}} Array Iteration
 `{{.users}}` <br />
 Loops Traverse data Arrays and repeat their content for each element in the Array.
 Due to the simplicity of the engine, there is on one restriction on nested looping: you cannont have a duplicated property name iterated on different nested levels; eg. `{users:{users:[1,2,3]}}` is no good.
@@ -51,6 +53,13 @@ Due to the simplicity of the engine, there is on one restriction on nested loopi
 <br /> ex: ` nostache("{{.numbers}}{{INDEX}}:{{.}} {{/numbers}}", {numbers:[11,22,33]}) == "1:11 2:22 3:33 "; `
 <br /> ex: ` nostache("{{.numbers}}{{INDEX}}:{{.}}{{SEP}}, {{/SEP}}{{/numbers}}", {numbers:[11,22,33]}) == "1:11, 2:22, 3:33" `
 <br /> ex: ` nostache("{{.numbers}}{{ (i%2) ? i : ''}}{{/numbers}}", {numbers:[{i:11},{i:22},{i:33}]}) == "1133"; `
+
+#### {{.obj:key}} Object Iteration
+ Iterates over objects using a placeholder name on the section tag, prefixed by ":". <br />
+ Inside the section, the key as a tag will equal the name of the object property's key, and `.` will equal the property value.
+<br /> ex:  `nostache('{{.a:k}}{{k}}: {{.}} {{/a:k}}', {a:{b:1,c:5}}) == "b: 1 c: 5 ";`
+
+
 
 
 ### Conditionals
@@ -82,12 +91,6 @@ This is a big piece of functionality missing from Mustache.js, and can be quite 
 ### {{__.key}} root syntax
 `{{__.key}}` reaches _key_ on the data object given to nostache, bypassing local conflicts. 
 <br /> ex:  `nostache('{{.b}}{{this.a}}|{{__.a}} {{/b}}', {a:123, b:[{a:1}]} ) == "1|123 ";`
-
-### {{.obj:key}} object iteration
- Iterates over objects using a placeholder name on the section tag, prefixed by ":". <br />
- Inside the section, the key as a tag will equal the name of the object property's key, and `.` will equal the property value.
-<br /> ex:  `nostache('{{.a:k}}{{k}}: {{.}} {{/a:k}}', {a:{b:1,c:5}}) == "b: 1 c: 5 ";`
-
 
 
 
