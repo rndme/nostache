@@ -26,8 +26,8 @@ var nostache=(function() {
 		.replace(rxNot, "${!($2)?\"$3\":''")		// condense NOT block into template expression
 		.replace(rxIf, "${$2?\"$3\":''")			// condense IF block into template expression
 		// condense array+object loops into template expressions:
-		.replace(rxObj, (j,k,a,b,c)=> "${Object.keys("+a+").map(function(a,b,c){return _tmp.call(this,"+json(c)+",this[a]||a,b,true,c,__,"+json(b)+");},ob["+json(a)+"]).join('')") // object 
-		.replace(rxLoop, (j,k,a,b)=> "${("+a+").map((a,b,c)=>_tmp.call(this,"+json(b)+",a,b,true,c,__),this).join('')") // array
+		.replace(rxObj, (j,k,o,prop,s)=> "${Object.keys("+o+").map(function(a,b,c){return _tmp.call(this,"+json(s)+",this[a]||a,b,true,c,__,"+json(prop)+");},ob["+json(o)+"]).join('')") // object 
+		.replace(rxLoop, (j,k,arr,prop)=> "${("+arr+").map((a,b,c)=>_tmp.call(this,"+json(prop)+",a,b,true,c,__),this).join('')") // array
 		.replace(rxCarrot, "${ob}");			// turn carrot marker into template expression
 		
 		var rez = Function("_tmp, ob, __, "+strKey, "with(ob)return `" + strTemplate + "`;");	// build string output renderer function
@@ -37,9 +37,9 @@ var nostache=(function() {
 
     return function tmp(strTemplate, data, objImports){	// the nostache function, accepts a string, data, and imports
 		// define imports from explictly-passed object, _this_, or a blank object
-		var imports= objImports || this || {};
+		objImports= objImports || this || {};
 		// run imports by replacing tokens with values from the imports object:
-		strTemplate=strTemplate.replace(rxImports, function(j,p){ return imports[p]; });
+		strTemplate=strTemplate.replace(rxImports, (j, name)=> objImports[name] );
 		
 		return data ? // return a render function, or if given data also, a composited string result:
 			_tmp.call(this, strTemplate).call(this, data) : 
