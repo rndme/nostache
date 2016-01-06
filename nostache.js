@@ -1,4 +1,4 @@
-  // nostache.js by dandavis [CCBY4]  https://github.com/rndme/nostache
+// nostache.js by dandavis [CCBY4]  https://github.com/rndme/nostache
 var nostache=(function() {
   // define syntax of the templates as RegExps:			approximation/eg
 	var rxImports = /\{\{>([\w\W]+?)\}\}/g,			// {{>...}}
@@ -15,12 +15,12 @@ var nostache=(function() {
 		rxCarrot = /\$\{\.\}/g,	// ${.}
 		J=JSON.stringify;
 		
-	function _tmp(strTemplate, ob, index, inner, c, data, KEY) {	// string to ES6 converter/executer
+	function _tmp(strTemplate, ob, numIndex, blnInnerCall, list, data, key) {	// string to ES6 converter/executer
 		s = strTemplate				// string FunctionBody of the dynamic rednerer
-		.replace(rxIndex, index + 1) 			// turn INDEX keyword into numeric literal
+		.replace(rxIndex, numIndex + 1) 			// turn INDEX keyword into numeric literal
 		.replace(rxRazor, "$1{{$2}}") 			// convert Razor to normal syntax
 		.replace(rxElse, "{{/$1}}{{^$1}}") 		// turn ELSE expressions into conditional syntax
-		.replace(rxSep, c&&(index<c.length-1)?"$1":"")	// replace SEP mini-sections with contents, or nothing of last
+		.replace(rxSep, list&&(numIndex<list.length-1)?"$1":"")	// replace SEP mini-sections with contents, or nothing of last
 		.replace(rxComments, "") 			// strip comment blocks
 		.replace(rxBraces, "${$1}")			// turn brace expressions into template string literals
 		.replace(rxNot, "${!($2)?\"$3\":''")		// condense NOT block into template expression
@@ -30,20 +30,19 @@ var nostache=(function() {
 		.replace(rxLoop, (j,k,a,b)=> "${("+a+").map((a,b,c)=>_tmp.call(this,"+J(b)+",a,b,true,c,__),this).join('')") // array
 		.replace(rxCarrot, "${ob}");			// turn carrot marker into template expression
 		
-		var rez = Function("_tmp, ob, __, "+KEY, "with(ob)return `" + s + "`;");	// build string output renderer function
-		if(inner) return rez.call(this, _tmp, ob, data, KEY);// if internally called, returns composited  string using context (not whole data)
-		return function(data) { return rez.call(this, _tmp, data, data, KEY); }; // returns a render function bound to the template internal renderer
+		var rez = Function("_tmp, ob, __, "+key, "with(ob)return `" + s + "`;");	// build string output renderer function
+		if(blnInnerCall) return rez.call(this, _tmp, ob, data, key);// if internally called, returns composited  string using context (not whole data)
+		return function(data) { return rez.call(this, _tmp, data, data, key); }; // returns a render function bound to the template internal renderer
 	}
 
-    return function tmp(strTemplate, data, imports){	// the nostache function, accepts a string, data, and imports
+    return function tmp(strTemplate, data, objImports){	// the nostache function, accepts a string, data, and imports
 		// define imports from explictly-passed object, _this_, or a blank object
-		var _imports= imports || this || {};
+		var imports= objImports || this || {};
 		// run imports by replacing tokens with values from the imports object:
-		strTemplate=strTemplate.replace(rxImports, function(j,p){ return _imports[p]; });
+		strTemplate=strTemplate.replace(rxImports, function(j,p){ return imports[p]; });
 		
 		return data ? // return a render function, or if given data also, a composited string result:
 			_tmp.call(this, strTemplate).call(this, data) : 
 			_tmp(strTemplate) ;
     };
 }());
-  
