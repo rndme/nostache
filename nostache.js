@@ -30,7 +30,7 @@ var nostache=(function() {
 		.replace(rxLoop, (j,k,a,b)=> "${("+a+").map((a,b,c)=>_tmp.call(this,"+J(b)+",a,b,true,c,__),this).join('')") // array
 		.replace(rxCarrot, "${ob}");			// turn carrot marker into template expression
 		
-		var rez = Function("_tmp, ob, __, "+key, "with(ob)return `" + s + "`;");	// build string output renderer function
+		var rez = Function("_tmp, ob, __, "+key, "with(ob)return `" + strTemplate + "`;");	// build string output renderer function
 		if(blnInnerCall) return rez.call(this, _tmp, objContext, allData, key);// if internally called, returns composited  string using context (not whole data)
 		return function(data) { return rez.call(this, _tmp, data, data, key); }; // returns a render function bound to the template internal renderer
 	}
