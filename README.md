@@ -28,10 +28,10 @@ strOutput = fnRender(objData);
 ### Injection
 `{{name}}` | `{{root.branch.sub.name.prop}}` | `{{user['name']}}` | `{{name.bold()}}` | `{{++this['total'] * 10 }}` <br />
 Inserts the value of the named path. Unlike Mustache, you can use bracket notation and invoke methods inline, even passing arguments to methods via primitives or early-run _imports_. You can perform calculations mid-expression using virtually any valid javascript expression. You can reach not only in-scope variables, but globals like `Math.random()` as well. Also keep in mind that you can use ES6 template strings to inject dynamic values into the template before it executes.
-<br /> ex: `nostache("Hello {{name}}", {name: "Fred"}) == "Hello Fred";`
-<br /> ex: `nostache("Hello <b>{{name}}</b>", {name:"Fred"}) == "Hello <b>Fred</b>";`
-<br /> ex: `nostache("Hello {{name}}", {name:"Fred".bold()}) == "Hello <b>Fred</b>";`
-<br /> ex: `nostache("Hello {{name.bold()}}", {name:"Fred"}) == "Hello <b>Fred</b>";`
+<br /> ex: `nostache("Hello {{this.name}}", {name: "Fred"}) == "Hello Fred";`
+<br /> ex: `nostache("Hello <b>{{this.name}}</b>", {name:"Fred"}) == "Hello <b>Fred</b>";`
+<br /> ex: `nostache("Hello {{this.name}}", {name:"Fred".bold()}) == "Hello <b>Fred</b>";`
+<br /> ex: `nostache("Hello {{this.name.bold()}}", {name:"Fred"}) == "Hello <b>Fred</b>";`
 <br /> ex: `nostache("Random Number: {{1/Math.random()}}", {});`
 
 
@@ -81,7 +81,7 @@ This is a big piece of functionality missing from Mustache.js, and can be quite 
 
 ### {{__.key}} root syntax
 `{{__.key}}` reaches _key_ on the data object given to nostache, bypassing local conflicts. 
-<br /> ex:  `nostache('{{.b}}{{a}}|{{__.a}} {{/b}}', {a:123, b:[{a:1}]} ) == "1|123 ";`
+<br /> ex:  `nostache('{{.b}}{{this.a}}|{{__.a}} {{/b}}', {a:123, b:[{a:1}]} ) == "1|123 ";`
 
 ### {{.obj:key}} object iteration
  Iterates over objects using a placeholder name on the section tag, prefixed by ":". <br />
