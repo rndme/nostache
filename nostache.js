@@ -10,7 +10,7 @@ var nostache=(function() {
 		rxBraces = /\{\{([\w\W]+?)\}\}/g,		// {{...}}
 		rxNot = /\$\{([\^])([\w\W]+?)\}(.+?)\$\{\/\2/g,	// ${^ ...}...${$1}
 		rxIf = /\$\{([#])([\w\W]+?)\}(.+?)\$\{\/\2/g,	// ${# ...}...${$1}
-		rxObj = /\$\{(\.)([\w.]+?):([\w.]+?)\}([\w\W]+?)\$\{\/\2:\3/g,	// ${. ...}...${$1}
+		rxObj = /\$\{(\.)([\w.]+?):([\w.]+?)\}([\w\W]+?)\$\{\/\2:\3/g,	// ${.:. ...}...${$1}
 		rxLoop = /\$\{(\.)([\w\W]+?)\}([\w\W]+?)\$\{\/\2/g,	// ${. ...}...${$1}	
 		rxCarrot = /\$\{\.\}/g;	// ${.}
 
@@ -24,12 +24,9 @@ var nostache=(function() {
 		.replace(rxBraces, "${$1}")			// turn brace expressions into template string literals
 		.replace(rxNot, "${!($2)?\"$3\":''")		// condense NOT block into template expression
 		.replace(rxIf, "${$2?\"$3\":''")			// condense IF block into template expression
-		.replace(rxObj, function(j,k,a,b,c){ 		// condense loop block into template expression:
-			return "${Object.keys("+a+").map(function(a,b,c){return _tmp.call(this,"+JSON.stringify(c)+",this[a]||a,b,true,c,__,"+JSON.stringify(b)+");},ob["+JSON.stringify(a)+"]).join('')";
-		})		
-		.replace(rxLoop, function(j,k,a,b){ 		// condense loop block into template expression:
-			return "${("+a+").map((a,b,c)=>_tmp.call(this,"+JSON.stringify(b)+",a,b,true,c,__),this).join('')";
-		}) 
+		// condense array+object loops into template expressions:
+		.replace(rxObj, (j,k,a,b,c)=> "${Object.keys("+a+").map(function(a,b,c){return _tmp.call(this,"+JSON.stringify(c)+",this[a]||a,b,true,c,__,"+JSON.stringify(b)+");},ob["+JSON.stringify(a)+"]).join('')") // object 
+		.replace(rxLoop, (j,k,a,b)=> "${("+a+").map((a,b,c)=>_tmp.call(this,"+JSON.stringify(b)+",a,b,true,c,__),this).join('')") // array
 		.replace(rxCarrot, "${ob}"),			// turn carrot marker into template expression
 		rez = Function("_tmp, ob, __, "+KEY, "with(ob)return `" + ss + "`;");	// build string output renderer function
 
