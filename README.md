@@ -91,7 +91,7 @@ This is a big piece of functionality missing from Mustache.js, and can be quite 
 <br /> ex:  `nostache('{{.b}}{{a}}|{{__.a}} {{/b}}', {a:123, b:[{a:1}]} ) == "1|123 ";`
 
 
-### {{#obj:key}} object iteration
+### {{.obj:key}} object iteration
  Iterates over objects using a placeholder name on the section tag, prefixed by ":". <br />
  Inside the section, the key as a tag will equal the name of the object property's key, and `.` will equal the property value.
 <br /> ex:  `nostache('{{.a:k}}{{k}}: {{.}} {{/a:k}}', {a:{b:1,c:5}}) == "b: 1 c: 5 ";`
