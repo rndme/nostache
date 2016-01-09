@@ -1,7 +1,7 @@
 {
   "name": "nostache",
   "main": "nostache.min.js",
-  "version": "1.2.0",
+  "version": "1.0.0",
   "description": "lightweight mustache-compatible template engine with benfits",
   "keywords": [
     "mustache",
