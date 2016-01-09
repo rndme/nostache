@@ -23,7 +23,9 @@ strOutput = fnRender(objData);
 `fnRender = nostache(strTemplate, null, objImports);` 
 
 ## Compared to Mustache, Handlebars, and Hogan
-Nostache is congruent with Mustache/Hogan, with many added features. It's not logic-less (JS expressions can be used mid-template).  Nostache needs pure functions, so it uses `this` in front of plain injections (see below). Those injections are also not HTML escaped by default like Mustache. you can both prefix `this` and HTML escape injections using the `{{=name}}` tag. Mustache also differs with minor features: it's hoisting of context, allowing lambdas in data (functions that return functions), and allowing custom delimters, none of which nostache supports. Handlebars shares many capabilities with Nostache, but Nostache syntax is more explict on the closing tags, ex. `{{/title}}{{/comments}}` instead of `{{/if}}{{/each}}`. Nostache is also the only mustache engine (afaik) that uses ES6 template strings instead of a full-blown parser.
+Nostache is congruent with Mustache/Hogan, with many added features. It's not logic-less (JS expressions can be used mid-template).  Nostache needs pure functions, so it uses `this` in front of plain injections (see below). Those injections are also not HTML escaped by default like Mustache. you can both prefix `this` and HTML escape injections using the `{{=name}}` tag. Mustache also differs with minor features: it's hoisting of context, allowing lambdas in data (functions that return functions), iterating data as an array using `{{#.}}{{.}}{{/.}}`, allowing non-valid property identifiers like "{{#person?}}",  and allowing custom delimters, none of which nostache supports. 
+
+Handlebars shares many capabilities with Nostache, but Nostache syntax is more explict on the closing tags, ex. `{{/title}}{{/comments}}` instead of `{{/if}}{{/each}}`. Nostache is also the only mustache engine (afaik) that uses ES6 template strings instead of a full-blown parser.
 
 
 ## Syntax Features
