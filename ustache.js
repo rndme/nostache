@@ -40,7 +40,7 @@
 
 		var rez = Function("_tmp, ob, __, KEY, SCOPE", "\"use strict\"; "+escapeHtml+ok+" return `" + strTemplate + "`;");	// build string output renderer function
 		if(blnInnerCall) return rez.call(objContext, _tmp, objContext, varAllData, arrList[numIndex],SCOPE);// if internally called, returns composited  string using context (not whole data)
-		return function(data) { return rez.call(data, _tmp, data, data,"__",SCOPE); }; // returns a render function bound to the template internal renderer
+		return function(data) { return rez.call(data||{}, _tmp, data, data,"__",SCOPE); }; // returns a render function bound to the template internal renderer
 	}
   
 	return that[cjs ? "exports" : "ustache"] = function ustache(strTemplate, data, objImports, SCOPE){	// accepts a string, data, and imports
@@ -54,3 +54,4 @@
   function ok(v,c,esc){var u; return (esc===true?escapeHtml:String)(v==u?'':(typeof v==='function'? v.call(c,v) : v));}
   function escapeHtml(a){return String(a).replace(/[&<>"'`=\/]/g,function(a){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;","/":"&#x2F;","`":"&#x60;","=":"&#x3D;"}[a]})};
 }));
+  
