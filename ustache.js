@@ -43,12 +43,12 @@
 		return function(data) { return rez.call(data, _tmp, data, data,"__",SCOPE); }; // returns a render function bound to the template internal renderer
 	}
   
-	return that[cjs ? "exports" : "ustache"] = function ustache(strTemplate, data, objImports){	// accepts a string, data, and imports
+	return that[cjs ? "exports" : "ustache"] = function ustache(strTemplate, data, objImports, SCOPE){	// accepts a string, data, and imports
 		// run imports by replacing tokens with values from the imports object:
 		if(objImports) strTemplate=strTemplate.replace(rxImports, function(j, name){ return objImports[name]; });
 		return data ? // return a render function, or if given data also, a composited string result:
-			_tmp.call(this, strTemplate, 0, {}).call(this, data) : 
-			_tmp(strTemplate, 0, {}) ;
+			_tmp.call(this, strTemplate, 0, SCOPE||{}).call(this, data) : 
+			_tmp(strTemplate, 0, SCOPE||{}) ;
     	};
 
   function ok(v,c,esc){var u; return (esc===true?escapeHtml:String)(v==u?'':(typeof v==='function'? v.call(c,v) : v));}
