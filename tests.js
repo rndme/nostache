@@ -1,4 +1,4 @@
-console.log( nostache.rez ={ // nostache internal unit tests. tests bare basics and extra functionality above and beyond mustache.
+console.log( nostache.rez = { // nostache internal unit tests. tests bare basics and extra functionality above and beyond mustache.
 
 	basic:		nostache("Hello {{this.name}}", {name: "Fred"}) 
 			== "Hello Fred",
