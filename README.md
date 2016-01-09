@@ -16,6 +16,7 @@ A 2kb template engine that does 80% of what mustache does, and with extra declar
    * [{{INDEX}}](#index)
    * [{{SEP}} mini-section](#sep-mini-section)
    * [{{__.key}} root syntax](#__key-root-syntax)
+   * [{{SCOPE}} state](#scope)
  
  
 
