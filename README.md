@@ -4,7 +4,7 @@
 ## Design
 A pre-compile-able 1kb engine that does what mustache does, and with extra declartive-view features. <br /> <br />
 
-To get all geeky: A RegExp-based 1-pass top-down transpiler (with imports) constructs a JIT ES6 template string that evaluates the embeded exressions. The only late-run code is for looping and `{{SEP}}` expressions, everything else is pure string processing, which makes it easy to reason about. It's 50 LOCs weight makes it easy to fork for customized applications.
+To get all geeky: A RegExp-based transpiler with imports constructs an ES6 template string that evaluates the embeded exressions. It's only about 50 lines of code, making it easy to fork for customized applications.
 
 
 
