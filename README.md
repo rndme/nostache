@@ -50,6 +50,7 @@ Handlebars shares many capabilities with Nostache, but Nostache syntax is more e
 
 
 ## Syntax Features
+You can use normal Mustche syntax, with a few exceptions and many additions. See the mustache.js front page for basic examples, review the unit tests (tests.js), or [run them live](http://danml.com/nostache/tests.html).
 
 ### Injection
 `{{this.name}}` | `@name ` | `{{=name}}` | `{{this.sub.name.prop}}` | `{{this.user['name']}}` | `{{this.name.bold()}}`  <br />
