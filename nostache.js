@@ -1,8 +1,8 @@
 (function (that, factory) { // ustache.js by dandavis [CCBY4]  https://github.com/rndme/ustache
- if(typeof exports === 'object')   			factory(exports); 		// CommonJS
+ if(typeof module === 'object')   			factory(module, 1); 		// CommonJS
  else if(typeof define === 'function' && define.amd)	define(['exports'], factory); 	// AMD
  else							factory(that) 	// script, wsh, asp  
-}(this, function(that) { //  syntax RegExps		approximation/eg
+}(this, function(that,cjs) { //  syntax RegExps		approximation/eg
 	var rxImports = /\{\{>\s*([\w\W]+?)\s*\}\}/g,	// {{>...}}
 	rxIndex = /\$\{INDEX\}/g, 			// ${INDEX}
 	rxRazor=/(\W)@([#\^!\/\.\)\(]?[\w\.$]+)/g,	// @[#^!/.)(]*ab.c
@@ -43,14 +43,14 @@
 		return function(data) { return rez.call(data, _tmp, data, data,"__",SCOPE); }; // returns a render function bound to the template internal renderer
 	}
   
-    return that.ustache = function ustache(strTemplate, data, objImports){	// accepts a string, data, and imports
+	return that[cjs ? "exports" : "ustache"] = function ustache(strTemplate, data, objImports){	// accepts a string, data, and imports
 		// run imports by replacing tokens with values from the imports object:
 		if(objImports) strTemplate=strTemplate.replace(rxImports, function(j, name){ return objImports[name]; });
 		return data ? // return a render function, or if given data also, a composited string result:
 			_tmp.call(this, strTemplate, 0, {}).call(this, data) : 
 			_tmp(strTemplate, 0, {}) ;
-    };
-  
+    	};
+
   function ok(v,c,esc){var u; return (esc===true?escapeHtml:String)(v==u?'':(typeof v==='function'? v.call(c,v) : v));}
   function escapeHtml(a){return String(a).replace(/[&<>"'`=\/]/g,function(a){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;","/":"&#x2F;","`":"&#x60;","=":"&#x3D;"}[a]})};
 }));
