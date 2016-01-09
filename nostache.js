@@ -1,8 +1,8 @@
-(function (that, factory) { // nostache.js by dandavis [CCBY4]  https://github.com/rndme/nostache
+(function (that, factory) { // ustache.js by dandavis [CCBY4]  https://github.com/rndme/ustache
  if(typeof exports === 'object')   			factory(exports); 		// CommonJS
  else if(typeof define === 'function' && define.amd)	define(['exports'], factory); 	// AMD
- else							that.nostache = factory(); 	// script, wsh, asp  
-}(this, function() { //  syntax RegExps		approximation/eg
+ else							factory(that) 	// script, wsh, asp  
+}(this, function(that) { //  syntax RegExps		approximation/eg
 	var rxImports = /\{\{>\s*([\w\W]+?)\s*\}\}/g,	// {{>...}}
 	rxIndex = /\$\{INDEX\}/g, 			// ${INDEX}
 	rxRazor=/(\W)@([#\^!\/\.\)\(]?[\w\.$]+)/g,	// @[#^!/.)(]*ab.c
@@ -43,7 +43,7 @@
 		return function(data) { return rez.call(data, _tmp, data, data,"__",SCOPE); }; // returns a render function bound to the template internal renderer
 	}
   
-    return function nostache(strTemplate, data, objImports){	// accepts a string, data, and imports
+    return that.ustache = function ustache(strTemplate, data, objImports){	// accepts a string, data, and imports
 		// run imports by replacing tokens with values from the imports object:
 		if(objImports) strTemplate=strTemplate.replace(rxImports, function(j, name){ return objImports[name]; });
 		return data ? // return a render function, or if given data also, a composited string result:
