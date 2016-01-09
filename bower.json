@@ -1,0 +1,19 @@
+{
+  "name": "nostache",
+  "main": "nostache.js",
+  "homepage": "https://github.com/rndme/nostache/",
+  "description": "lightweight mustache-compatible template engine with benfits",
+  "moduleType": [
+    "amd",
+    "globals",
+    "node"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
