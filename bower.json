@@ -1,7 +1,7 @@
 {
-  "name": "nostache",
-  "main": "nostache.js",
-  "homepage": "https://github.com/rndme/nostache/",
+  "name": "ustache",
+  "main": "ustache.js",
+  "homepage": "https://github.com/rndme/ustache/",
   "description": "lightweight mustache-compatible template engine with benfits",
   "moduleType": [
     "amd",
