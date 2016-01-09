@@ -40,7 +40,9 @@
 
 		var rez = Function("_tmp, ob, __, KEY, SCOPE", "\"use strict\"; "+escapeHtml+ok+" return `" + strTemplate + "`;");	// build string output renderer function
 		if(blnInnerCall) return rez.call(objContext, _tmp, objContext, varAllData, arrList[numIndex],SCOPE);// if internally called, returns composited  string using context (not whole data)
-		return function(data) { return rez.call(data||{}, _tmp, data, data,"__",SCOPE); }; // returns a render function bound to the template internal renderer
+		function _apply(data) { return rez.call(data||{}, _tmp, data, data,"__",SCOPE); }; // returns a render function bound to the template internal renderer
+		_apply.SCOPE=SCOPE;
+		return _apply;
 	}
   
 	return that[cjs ? "exports" : "ustache"] = function ustache(strTemplate, data, objImports, SCOPE){	// accepts a string, data, and imports
