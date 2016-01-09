@@ -1,0 +1,38 @@
+{
+  "name": "nostache",
+  "main": "nostache.min.js",
+  "version": "1.2.0",
+  "description": "lightweight mustache-compatible template engine with benfits",
+  "keywords": [
+    "mustache",
+    "templating",
+    "ES6",
+    "js"
+  ],
+  "homepage": "http://danml.com/nostache/",
+  "license": "CC-BY-4.0",
+  "author": {
+    "name": "dandavis",
+    "email": "rndme@users.noreply.github.com",
+    "url": "http://danml.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rndme/nostache.git"
+  },
+  "bugs": {
+    "email": "rndme@users.noreply.github.com"
+  },
+  "files": [
+    "nostache.js"
+  ],
+  "npmName": "nostache",
+  "npmFileMap": [
+    {
+      "basePath": "/",
+      "files": [
+        "nostache.js"
+      ]
+    }
+  ]
+}
