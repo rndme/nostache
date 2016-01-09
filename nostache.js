@@ -1,48 +1,54 @@
 // nostache.js by dandavis [CCBY4]  https://github.com/rndme/nostache
-var nostache=(function() {
-  // define syntax of the templates as RegExps:			approximation/eg
-	var rxImports = /\{\{>([\w\W]+?)\}\}/g,			// {{>...}}
-		rxIndex = /\$\{INDEX\}/g, 			// ${INDEX}
-		rxRazor=/(\W)@([#\^!\/\|\.\)\(]?[\w\.$|]+)/g,	// @[#^!/.)(]*ab.c
-		rxElse = /\{\{\!([\w\W]+?)\}\}/g,		// {{!...}}
-		rxSep = /\$\{SEP\}([\w\W]+?)\$\{\/SEP\}/g, 	// ${SEP}...${/SEP}
-		rxComments = /\{\{\!\-\-[\w\W]*?\-\-\}\}/g,	// {{!--...--}}
-		rxBraces = /\{\{([\w\W]+?)\}\}/g,		// {{...}}
-		rxNot = /\$\{([\^])([\w\W]+?)\}(.+?)\$\{\/\2/g,	// ${^ ...}...${$1}
-		rxIf = /\$\{([#])([\w\W]+?)\}(.+?)\$\{\/\2/g,	// ${# ...}...${$1}
-		rxObj = /\$\{(\.)([\w.]+?):([\w.]+?)\}([\w\W]+?)\$\{\/\2:\3/g,	// ${.:. ...}...${$1}
-		rxLoop = /\$\{(\.)([\w\W]+?)\}([\w\W]+?)\$\{\/\2/g,	// ${. ...}...${$1}	
-		rxCarrot = /\$\{\.\}/g,	// ${.}
-		json=JSON.stringify;
-		
+var nostache=(function() { //  syntax RegExps		approximation/eg
+	var rxImports = /\{\{>\s*([\w\W]+?)\s*\}\}/g,	// {{>...}}
+	rxIndex = /\$\{INDEX\}/g, 			// ${INDEX}
+	rxRazor=/(\W)@([#\^!\/\.\)\(]?[\w\.$]+)/g,	// @[#^!/.)(]*ab.c
+	rxElse = /\{\{\|([\w\W]+?)\}\}/g,		// {{!...}}
+	rxSep = /\$\{SEP\}([\w\W]+?)\$\{\/SEP\}/g, 	// ${SEP}...${/SEP}
+	rxComments = /\{\{\![\w\W]*?\}\}/g,		// {{!...}}
+	rxInject = /\{\{=([\w\W]+?)\}\}/g,		// {{=...}}
+	rxBraces = /\{?\{\{&?([\w\W]+?)\}\}\}?/g,	// {{...}}
+	rxNot =  /\$\{(\^)([\w\W]+?)\}(.+?)\$\{\/\2/g,	// ${^ ...}...${$1}
+	rxCond = /\$\{(\?)([\w\W]+?)\}(.+?)\$\{\/\2/g,	// ${? ...}...${$1}
+	rxIf =   /\$\{(\#)\s*([\w\W]+?)\s*\}([\w\W]+?)?\$\{\/\s*\2/g,	// ${^ ...}...${$1}
+	rxObj = /\$\{\$([\w.]+?)\}([\w\W]+?)\$\{\/\1/g,	// ${$:. ...}...${$1}
+	rxCarrot = /\$\{\.\}/g,				// ${.}
+	rxPath = /\$\{\s*([\w\.]+)\s*\}/g,		// ${...}
+	rxReserved = /\b((this)|(SEP)|(INDEX)|(KEY)|(__))\b/,
+	rxDouble = /this\.\./g,
+	json = JSON.stringify;	
+  
 	function _tmp(strTemplate, objContext, numIndex, blnInnerCall, arrList, varAllData, strKey) {	// string to ES6 converter/executer
-		strTemplate = strTemplate			// string FunctionBody of the dynamic rednerer
+		strTemplate = String(strTemplate)		// string FunctionBody of the dynamic rednerer
 		.replace(rxIndex, numIndex + 1) 			// turn INDEX keyword into numeric literal
-		.replace(rxRazor, "$1{{$2}}") 			// convert Razor to normal syntax
+		.replace(rxRazor, "$1{{this.$2}}") 		// convert Razor to normal syntax
+		.replace(rxInject, "{{ok(this.$1,this,true)}}") 	// make injections safe
 		.replace(rxElse, "{{/$1}}{{^$1}}") 		// turn ELSE expressions into conditional syntax
 		.replace(rxSep, arrList && (numIndex<arrList.length-1) ? "$1" : "" )	// replace SEP mini-sections with contents, or nothing of last
 		.replace(rxComments, "") 			// strip comment blocks
 		.replace(rxBraces, "${$1}")			// turn brace expressions into template string literals
-		.replace(rxNot, "${!($2)?\"$3\":''")		// condense NOT block into template expression
-		.replace(rxIf, "${$2?\"$3\":''")			// condense IF block into template expression
-		// condense array+object loops into template expressions:
-		.replace(rxObj, (j,k,o,prop,s)=> "${Object.keys("+o+").map(function(a,b,c){return _tmp.call(this,"+json(s)+",this[a]||a,b,true,c,__,"+json(prop)+");},ob["+json(o)+"]).join('')") // object 
-		.replace(rxLoop, (j,k,arr,prop)=> "${("+arr+").map((a,b,c)=>_tmp.call(this,"+json(prop)+",a,b,true,c,__),this).join('')") // array
-		.replace(rxCarrot, "${ob}");			// turn carrot marker into template expression
-		
-		var rez = Function("_tmp, ob, __, "+strKey, "with(ob)return `" + strTemplate + "`;");	// build string output renderer function
-		if(blnInnerCall) return rez.call(this, _tmp, objContext, varAllData, arrList[numIndex]);// if internally called, returns composited  string using context (not whole data)
-		return function(data) { return rez.call(this, _tmp, data, data); }; // returns a render function bound to the template internal renderer
+		.replace(rxNot, "${(!this.$2||Array.isArray(this.$2)&&this.$2.length===0)?\"$3\":''")		// condense NOT block into template w/ mustache rules
+		.replace(rxObj, (j,o,s)=> "${Object.keys(this."+o+").map(function(a,b,c){return _tmp.call(this,"+json(s)+",this[a]||a,b,true,c,__);},this["+json(o)+"]).join('')") // object iteration
+		.replace(rxCond, "${this.$2?\"$3\":''")		// condense conditional block into ES6 template expression
+		.replace(rxIf, function(j,k,arr,content){var tt= "this["+json(arr)+"]";	return "${ " + tt +" ? ( typeof "+tt+"=='object' ? ( Array.isArray("+tt+")? ("+tt+") : ["+tt+"]   ).map((a,b,c)=>_tmp.call(this,"+json(content)+",a,b,true,c,__),this).join('') :  _tmp.call(this,(typeof "+tt+"=='function'?"+tt+".call(this,"+json(content)+"):"+json(content)+"),this,0,true,[],'') 		  ) : '' ";})
+		.replace(rxCarrot, "${this}")			// replace {{.}} with this pointer
+		.replace(rxPath, function(j,path){ return rxReserved.test(path) ? "${"+path+"}" : "${ok(this."+path+",this)}"; })	  
+		.replace(rxDouble,"this."); 			// fix possible dot dot bug to pass mustache unit tests
+	  
+		var rez = Function("_tmp, ob, __, KEY", "\"use strict\"; "+escapeHtml+ok+" return `" + strTemplate + "`;");	// build string output renderer function
+		if(blnInnerCall) return rez.call(objContext, _tmp, objContext, varAllData, arrList[numIndex]);// if internally called, returns composited  string using context (not whole data)
+		return function(data) { return rez.call(data, _tmp, data, data); }; // returns a render function bound to the template internal renderer
 	}
-
-    return function tmp(strTemplate, data, objImports){	// the nostache function, accepts a string, data, and imports
-		// define imports from explictly-passed object, _this_, or a blank object
-		objImports= objImports || this || {};
+  
+    return function tmp(strTemplate, data, objImports){	// accepts a string, data, and imports
 		// run imports by replacing tokens with values from the imports object:
-		strTemplate=strTemplate.replace(rxImports, (j, name)=> objImports[name] );
-		
+		if(objImports) strTemplate=strTemplate.replace(rxImports, (j, name)=> objImports[name] );
 		return data ? // return a render function, or if given data also, a composited string result:
 			_tmp.call(this, strTemplate).call(this, data) : 
 			_tmp(strTemplate) ;
     };
+  
+  function ok(v,c,esc){var u; return (esc===true?escapeHtml:String)(v==u?'':(typeof v==='function'? v.call(c,v) : v));}
+  function escapeHtml(a){return String(a).replace(/[&<>"'`=\/]/g,function(a){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;","/":"&#x2F;","`":"&#x60;","=":"&#x3D;"}[a]})};
 }());
+  
