@@ -1,7 +1,7 @@
 {
   "name": "ustache",
   "main": "ustache.js",
-  "version": "0.0.0",
+  "version": "1.0.1",
   "description": "lightweight mustache-compatible template engine with benfits",
   "keywords": [
     "mustache",
