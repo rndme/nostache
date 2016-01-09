@@ -1,6 +1,10 @@
 # nostache
 ### mustache.js-like templates w/ a tiny ES6 core
 
+* [Usage](#usage)
+* [Looping](#looping)
+
+
 ## Design
 A 2kb template engine that does 80% of what mustache does, and with extra declartive-view features. <br /> <br />
 A RegExp-based transpiler with imports constructs an ES6 template string that evaluates the embeded exressions. It's only about 50 lines of code, making it easy to fork for customized applications. It's written with as few moving peices as possible, with an eye towards customization without complication.
