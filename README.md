@@ -131,3 +131,9 @@ This is a big piece of functionality missing from Mustache.js, and can be quite 
 <br /> ex:  `ustache('{{.b}}{{this.a}}|{{__.a}} {{/b}}', {a:123, b:[{a:1}]} ) == "1|123 ";`
  <br />[top](#contents)
  
+ 
+### {{SCOPE}} state object
+`SCOPE` is a maleable internal object available to templates. You can use it to store view state like scroll positions, checkboxes options, active section, etc. The object is auto-created or passed during the initial call to ustache(), and inherited by imports and all code in the template, allowing templates to act more like components. You can reach this object as `SCOPE` from any injection, section, or conditional template tag.
+<br /> ex:  ` nostache("{{SCOPE.nick=this.name.bold(),''}} Hello {{SCOPE.nick}}", {name:"Fred"}) == " Hello <b>Fred</b>";`
+<br />[top](#contents)
+ 
