@@ -66,10 +66,13 @@ Due to the simplicity of the engine, there is on one restriction on nested loopi
 <br /> ex:  `nostache('{{$a}}{{KEY}}: {{.}} {{/a}}', {a:{b:1,c:5}}) == "b: 1 c: 5 ";`
 
 ### Conditionals
-`{{#total>0}}` | `{{^total>0}}` | `{{#section=="home"}}` <br />
+`{{#total}}` | `{{^total}}` | `{{#section}}` <br />
+Same are mustache, if the target property is non falsy, the contents are included. <br />
+
+`{{?total>0}}` | `{{?section=="home"}}` <br />
 This is a big piece of functionality missing from Mustache.js, and can be quite helpful when constructing views. If the expression returns falsy, the contents are ommited. If the expression is truthy, the contents are included/executed. This can help add "active" classes to navigation and show/hide sections content according to task/location/time/etc. Logic in the template allow declarative view definition and eliminates the need for DOM-binding to achieve view updates.
-<br /> ex: ` nostache("i is {{#i > 5}}big{{/i > 5}}{{#i<6}}small{{/i<6}}", {i: 2}) == "i is small"; `
-<br /> ex: ` nostache("i is {{#i > 5}}big{{/i > 5}}{{#i<6}}small{{/i<6}}", {i: 9}) == "i is big"; `
+<br /> ex: ` nostache("i is {{?i > 5}}big{{/i > 5}}{{?i<6}}small{{/i<6}}", {i: 2}) == "i is small"; `
+<br /> ex: ` nostache("i is {{?i > 5}}big{{/i > 5}}{{?i<6}}small{{/i<6}}", {i: 9}) == "i is big"; `
 
 
 
