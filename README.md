@@ -21,7 +21,7 @@ A 2kb template engine that does 80% of what mustache does, and with extra declar
 
 
 ## Design
-A RegExp-based transpiler with imports constructs an ES6 template string [compat...](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/template_strings#Browser_compatibility) that evaluates the embeded exressions. It's only about 50 lines of code, making it easy to fork for customized applications. It's written with as few moving peices as possible, with an eye towards customization without complication.  - [top](#contents)
+A RegExp-based transpiler with imports constructs an [ES6 template string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/template_strings#Browser_compatibility) that evaluates the embeded exressions. It's only about 50 lines of code, making it easy to fork for customized applications. It's written with as few moving peices as possible, with an eye towards customization without complication.  - [top](#contents)
 
 
 
