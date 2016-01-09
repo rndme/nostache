@@ -1,5 +1,8 @@
-// nostache.js by dandavis [CCBY4]  https://github.com/rndme/nostache
-var nostache=(function() { //  syntax RegExps		approximation/eg
+(function (that, factory) { // nostache.js by dandavis [CCBY4]  https://github.com/rndme/nostache
+ if(typeof exports === 'object')   			factory(exports); 		// CommonJS
+ else if(typeof define === 'function' && define.amd	define(['exports'], factory); 	// AMD
+ else  							that.nostache = factory(); 	// script, wsh, asp  
+}(this, function() { //  syntax RegExps		approximation/eg
 	var rxImports = /\{\{>\s*([\w\W]+?)\s*\}\}/g,	// {{>...}}
 	rxIndex = /\$\{INDEX\}/g, 			// ${INDEX}
 	rxRazor=/(\W)@([#\^!\/\.\)\(]?[\w\.$]+)/g,	// @[#^!/.)(]*ab.c
@@ -34,12 +37,13 @@ var nostache=(function() { //  syntax RegExps		approximation/eg
 		.replace(rxCarrot, "${this}")			// replace {{.}} with this pointer
 		.replace(rxPath, function(j,path){ return rxReserved.test(path) ? "${"+path+"}" : "${ok(this."+path+",this)}"; })	  
 		.replace(rxDouble,"this."); 			// fix possible dot dot bug to pass mustache unit tests
+
 		var rez = Function("_tmp, ob, __, KEY, SCOPE", "\"use strict\"; "+escapeHtml+ok+" return `" + strTemplate + "`;");	// build string output renderer function
 		if(blnInnerCall) return rez.call(objContext, _tmp, objContext, varAllData, arrList[numIndex],SCOPE);// if internally called, returns composited  string using context (not whole data)
 		return function(data) { return rez.call(data, _tmp, data, data,"__",SCOPE); }; // returns a render function bound to the template internal renderer
 	}
   
-    return function tmp(strTemplate, data, objImports){	// accepts a string, data, and imports
+    return function nostache(strTemplate, data, objImports){	// accepts a string, data, and imports
 		// run imports by replacing tokens with values from the imports object:
 		if(objImports) strTemplate=strTemplate.replace(rxImports, (j, name)=> objImports[name] );
 		return data ? // return a render function, or if given data also, a composited string result:
@@ -49,4 +53,4 @@ var nostache=(function() { //  syntax RegExps		approximation/eg
   
   function ok(v,c,esc){var u; return (esc===true?escapeHtml:String)(v==u?'':(typeof v==='function'? v.call(c,v) : v));}
   function escapeHtml(a){return String(a).replace(/[&<>"'`=\/]/g,function(a){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;","/":"&#x2F;","`":"&#x60;","=":"&#x3D;"}[a]})};
-}());
+}));
