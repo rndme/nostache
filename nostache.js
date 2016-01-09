@@ -1,7 +1,7 @@
 (function (that, factory) { // nostache.js by dandavis [CCBY4]  https://github.com/rndme/nostache
  if(typeof exports === 'object')   			factory(exports); 		// CommonJS
- else if(typeof define === 'function' && define.amd	define(['exports'], factory); 	// AMD
- else  							that.nostache = factory(); 	// script, wsh, asp  
+ else if(typeof define === 'function' && define.amd)	define(['exports'], factory); 	// AMD
+ else							that.nostache = factory(); 	// script, wsh, asp  
 }(this, function() { //  syntax RegExps		approximation/eg
 	var rxImports = /\{\{>\s*([\w\W]+?)\s*\}\}/g,	// {{>...}}
 	rxIndex = /\$\{INDEX\}/g, 			// ${INDEX}
@@ -31,7 +31,7 @@
 		.replace(rxComments, "") 			// strip comment blocks
 		.replace(rxBraces, "${$1}")			// turn brace expressions into template string literals
 		.replace(rxNot, "${(!this.$2||Array.isArray(this.$2)&&this.$2.length===0)?\"$3\":''")		// condense NOT block into template w/ mustache rules
-		.replace(rxObj, (j,o,s)=> "${Object.keys(this."+o+").map(function(a,b,c){return _tmp.call(this,"+json(s)+",this[a]||a,SCOPE,b,true,c,__);},this["+json(o)+"]).join('')") // object iteration
+		.replace(rxObj, function(j,o,s){return "${Object.keys(this."+o+").map(function(a,b,c){return _tmp.call(this,"+json(s)+",this[a]||a,SCOPE,b,true,c,__);},this["+json(o)+"]).join('')";}) // object iteration
 		.replace(rxCond, "${this.$2?\"$3\":''")		// condense conditional block into ES6 template expression
 		.replace(rxIf, function(j,k,arr,content){var tt= "this["+json(arr)+"]";	return "${ " + tt +" ? ( typeof "+tt+"=='object' ? ( Array.isArray("+tt+")? ("+tt+") : ["+tt+"]   ).map((a,b,c)=>_tmp.call(this,"+json(content)+",a,SCOPE,b,true,c,__),this).join('') :  _tmp.call(this,(typeof "+tt+"=='function'?"+tt+".call(this,"+json(content)+"):"+json(content)+"),this,SCOPE,0,true,[],'') 		  ) : '' ";})
 		.replace(rxCarrot, "${this}")			// replace {{.}} with this pointer
@@ -45,7 +45,7 @@
   
     return function nostache(strTemplate, data, objImports){	// accepts a string, data, and imports
 		// run imports by replacing tokens with values from the imports object:
-		if(objImports) strTemplate=strTemplate.replace(rxImports, (j, name)=> objImports[name] );
+		if(objImports) strTemplate=strTemplate.replace(rxImports, function(j, name){ return objImports[name]; });
 		return data ? // return a render function, or if given data also, a composited string result:
 			_tmp.call(this, strTemplate, 0, {}).call(this, data) : 
 			_tmp(strTemplate, 0, {}) ;
