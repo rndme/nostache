@@ -1,6 +1,6 @@
 # nostache
 ### mustache.js-like templates w/ a tiny ES6 core
-A 2kb template engine that does 80% of what mustache does, and with extra declartive-view features. <br /> <br />
+A 2kb template engine that does 80% of what mustache does, and with extra declarative-view features. <br /> <br />
 
 ## Contents
 * [Design](#design)
