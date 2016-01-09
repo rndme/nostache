@@ -23,53 +23,54 @@ strOutput = fnRender(objData);
 `fnRender = nostache(strTemplate, null, objImports);` 
 
 ## Compared to Mustache, Handlebars, and Hogan
-Nostache is largely congruent with Mustache/Hogan, with many added features. It's not logic-less (JS expressions can be used mid-template). Nostaches uses `{{.arr}}` instead of `{{#arr}}` to avoid ambiguity with conditionals `{{#huh}}` that require run-time branching. Nostache also needs pure functions, so it uses `this` in front of plain injections (see below). Those injections are also not HTML escaped by default like Mustache. Handlebars shares many capabilities with Nostache, but Nostache syntax is more explict on the closing tags, ex. `{{/title}}{{/comments}}` instead of `{{/if}}{{/each}}`.
+Nostache is congruent with Mustache/Hogan, with many added features. It's not logic-less (JS expressions can be used mid-template).  Nostache needs pure functions, so it uses `this` in front of plain injections (see below). Those injections are also not HTML escaped by default like Mustache. you can both prefix `this` and HTML escape injections using the `{{=name}}` tag. Mustache also differs with minor features: it's hoisting of context, allowing lambdas in data (functions that return functions), and allowing custom delimters, none of which nostache supports. Handlebars shares many capabilities with Nostache, but Nostache syntax is more explict on the closing tags, ex. `{{/title}}{{/comments}}` instead of `{{/if}}{{/each}}`. Nostache is also the only mustache engine (afaik) that uses ES6 template strings instead of a full-blown parser.
 
 
 ## Syntax Features
 
 ### Injection
-`{{this.name}}` | `@name ` | `{{this.sub.name.prop}}` | `{{this.user['name']}}` | `{{this.name.bold()}}`  <br />
+`{{this.name}}` | `@name ` | `{{=name}}` | `{{this.sub.name.prop}}` | `{{this.user['name']}}` | `{{this.name.bold()}}`  <br />
 Inserts the value of the named path. Unlike Mustache, you can use bracket notation and invoke methods inline, even passing arguments to methods via primitives or early-run _imports_. You can perform calculations mid-expression using virtually any valid javascript expression. You can reach not only in-scope variables, but globals like `Math.random()` as well. Also keep in mind that you can use ES6 template strings to inject dynamic values into the template before it executes.
-<br /> ex: `nostache("Hello {{this.name}}", {name: "Fred"}) == "Hello Fred";`
+<br /> ex: `nostache("Hello {{=name}}", {name: "Fred"}) == "Hello Fred";`
 <br /> ex: `nostache("Hello <b>{{this.name}}</b>", {name:"Fred"}) == "Hello <b>Fred</b>";`
-<br /> ex: `nostache("Hello {{this.name}}", {name:"Fred".bold()}) == "Hello <b>Fred</b>";`
+<br /> ex: `nostache("Hello @name", {name:"Fred".bold()}) == "Hello <b>Fred</b>";`
 <br /> ex: `nostache("Hello {{this.name.bold()}}", {name:"Fred"}) == "Hello <b>Fred</b>";`
-<br /> ex: `nostache("Random Number: {{1/Math.random()}}", {});`
-
+<br /> ex: `nostache("Hello {{=name}}", {name:"Fred".bold()}) == "Hello &lt;b&gt;Fred&lt;&#x2F;b&gt;";`
+<br /> ex: `nostache("Random Number: {{1/Math.random()}}", {}); // yes, expressions work!`
 
 
 ### Imports
 `{{>name}}` <br />
-Imports use the same syntax, but work slightly differently than Mustache's partials. Whereas Mustache partials are executed in-flow and with surrounding context, Nostache imports run globally just prior to templating. Global (flat) processing executes much faster than Mustache's, but also means that Nostache imports cannot import other imports. All imported values should be directed properties of the _imports_ object (no nested sub-objects). You can omit the _imports_ object at call-time, which triggers import resolution to look at the _this_ object instead, which allows a handy way to bind() a set of resources to a rendering function. As they execute, imports simply replace literal text, with no consideration of context or validity. This is a good thing because you can inject template code, and it will get executed as though it were hard-coded, providing a macro-like stage of code execution.
+Imports use the same syntax, but work slightly differently than Mustache's partials. Whereas Mustache partials are executed in-flow and with surrounding context, Nostache imports run globally just prior to templating. Global (flat) processing executes much faster than Mustache's, but also means that Nostache imports cannot import other imports. All imported values should be direct properties of the _imports_ object (no nested sub-objects).  As they execute, imports simply replace literal text, with no consideration of context or validity. This is a good thing because you can inject template code, and it will get executed as though it were hard-coded, providing a macro-like stage of code execution.
 
 
 ### Looping
 
-#### {{.arr}} Array Iteration
-`{{.users}}` <br />
+#### {{#arr}} Array Iteration
+`{{#users}}` <br />
 Iterates data Arrays and repeats their content for each element in the Array.
-Due to the simplicity of the engine, there is on one restriction on nested looping: you cannont have a duplicated property name iterated on different nested levels; eg. `{users:{users:[1,2,3]}}` is no good.
-<br /> ex: ` nostache("{{.numbers}}#{{/numbers}}", {numbers:[11,22,33]}) == "###"; `
-<br /> ex: ` nostache("{{.numbers}}{{.}} {{/numbers}}", {numbers:[11,22,33]}) == "11 22 33 "; `
-<br /> ex: ` nostache("{{.numbers}}{{.}}{{SEP}}, {{/SEP}}{{/numbers}}", {numbers:[11,22,33]}) == "11, 22, 33"; `
-<br /> ex: ` nostache("{{.numbers}}{{INDEX}}:{{.}} {{/numbers}}", {numbers:[11,22,33]}) == "1:11 2:22 3:33 "; `
-<br /> ex: ` nostache("{{.numbers}}{{INDEX}}:{{.}}{{SEP}}, {{/SEP}}{{/numbers}}", {numbers:[11,22,33]}) == "1:11, 2:22, 3:33" `
-<br /> ex: ` nostache("{{.numbers}}{{ (i%2) ? i : ''}}{{/numbers}}", {numbers:[{i:11},{i:22},{i:33}]}) == "1133"; `
+Due to the simplicity of the engine, there is on one restriction on nested looping: you cannont have a duplicated property name iterated on different nested levels; eg. `{users:{users:[1,2,3]}}` is no good. Note that # tags also provide other capabilities: they acti like switches if fed a boolean, and they drill into nested data objects if they point to an object.
+<br /> ex: ` nostache("{{#numbers}}#{{/numbers}}", {numbers:[11,22,33]}) == "###"; `
+<br /> ex: ` nostache("{{#numbers}}{{.}} {{/numbers}}", {numbers:[11,22,33]}) == "11 22 33 "; `
+<br /> ex: ` nostache("{{#numbers}}{{.}}{{SEP}}, {{/SEP}}{{/numbers}}", {numbers:[11,22,33]}) == "11, 22, 33"; `
+<br /> ex: ` nostache("{{#numbers}}{{INDEX}}:{{.}} {{/numbers}}", {numbers:[11,22,33]}) == "1:11 2:22 3:33 "; `
+<br /> ex: ` nostache("{{#numbers}}{{INDEX}}:{{.}}{{SEP}}, {{/SEP}}{{/numbers}}", {numbers:[11,22,33]}) == "1:11, 2:22, 3:33" `
+<br /> ex: ` nostache("{{#numbers}}{{ (i%2) ? i : ''}}{{/numbers}}", {numbers:[{i:11},{i:22},{i:33}]}) == "1133"; `
 
-#### {{.obj:key}} Object Iteration
- Iterates over objects using a placeholder name on the section tag, prefixed by ":". <br />
- Inside the section, the key as a tag will equal the name of the object property's key, and `.` will equal the property value.
-<br /> ex:  `nostache('{{.a:k}}{{k}}: {{.}} {{/a:k}}', {a:{b:1,c:5}}) == "b: 1 c: 5 ";`
-
-
-
+#### {{$obj}} Object Iteration
+ Iterates over objects using a placeholder KEY name within the section tag. <br />
+ Inside the section KEY will equal the name of the object property's key and `.` will equal the property value.
+<br /> ex:  `nostache('{{$a}}{{KEY}}: {{.}} {{/a}}', {a:{b:1,c:5}}) == "b: 1 c: 5 ";`
 
 ### Conditionals
 `{{#total>0}}` | `{{^total>0}}` | `{{#section=="home"}}` <br />
 This is a big piece of functionality missing from Mustache.js, and can be quite helpful when constructing views. If the expression returns falsy, the contents are ommited. If the expression is truthy, the contents are included/executed. This can help add "active" classes to navigation and show/hide sections content according to task/location/time/etc. Logic in the template allow declarative view definition and eliminates the need for DOM-binding to achieve view updates.
 <br /> ex: ` nostache("i is {{#i > 5}}big{{/i > 5}}{{#i<6}}small{{/i<6}}", {i: 2}) == "i is small"; `
 <br /> ex: ` nostache("i is {{#i > 5}}big{{/i > 5}}{{#i<6}}small{{/i<6}}", {i: 9}) == "i is big"; `
+
+
+
+
 
 ### Razor Syntax
 `@lname, @fname` | ` @#users  @INDEX: @name  @/users` <br />
@@ -78,10 +79,10 @@ This is a big piece of functionality missing from Mustache.js, and can be quite 
 <br /> ex: ` nostache("Chars: @name.length", {name: "Fred"}) == "Chars: 4"; `
 <br /> ex: ` nostache("Hello @user.name", { user: {name: "Fred"} }) == "Hello Fred"; `
 
-### {{!path}} else syntax
-`{{!path}}` turns into `{{/path}}{{^path}}`, for simpler _else_ handling of regular mustache conditionals.
-<br /> ex: ` nostache("{{#i}}yes{{!i}}no{{/i}}", {i: 9}) == "yes"; `
-<br /> ex: ` nostache("{{#i}}yes{{!i}}no{{/i}}", {i: 0}) == "no"; `
+### {{|path}} else syntax
+`{{|path}}` turns into `{{/path}}{{^path}}`, for simpler _else_ handling of regular mustache conditionals.
+<br /> ex: ` nostache("{{#i}}yes{{|i}}no{{/i}}", {i: 9}) == "yes"; `
+<br /> ex: ` nostache("{{#i}}yes{{|i}}no{{/i}}", {i: 0}) == "no"; `
     
 ### {{INDEX}}
   Simple "contstant" that returns the current index when iterating an Array.
