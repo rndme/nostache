@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Nostache by rndme</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Nostache</h1>
+      <h2 class="project-tagline">a lightweight mustache-like template engine</h2>
+      <a href="https://github.com/rndme/nostache" class="btn">View on GitHub</a>
+      <a href="https://github.com/rndme/nostache/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/rndme/nostache/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="nostache" class="anchor" href="#nostache" aria-hidden="true"><span class="octicon octicon-link"></span></a>nostache</h1>
+
+<h3>
+<a id="mustachejs-like-templates-w-a-tiny-es6-core" class="anchor" href="#mustachejs-like-templates-w-a-tiny-es6-core" aria-hidden="true"><span class="octicon octicon-link"></span></a>mustache.js-like templates w/ a tiny ES6 core</h3>
+
+<h2>
+<a id="design" class="anchor" href="#design" aria-hidden="true"><span class="octicon octicon-link"></span></a>Design</h2>
+
+<p>A pre-compile-able 1kb engine that does what mustache does, and with extra declartive-view features. <br> <br></p>
+
+<p>To get all geeky: A RegExp-based 1-pass top-down transpiler (with imports) constructs a JIT ES6 template string that evaluates the embeded exressions. The only late-run code is for looping and <code>{{SEP}}</code> expressions, everything else is pure string processing, which makes it easy to reason about. It's 50 LOCs weight makes it easy to fork for customized applications.</p>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<h4>
+<a id="a-string-template-to-return-a-function-that-returns-an-html-string-when-passed-an-object-" class="anchor" href="#a-string-template-to-return-a-function-that-returns-an-html-string-when-passed-an-object-" aria-hidden="true"><span class="octicon octicon-link"></span></a>(a string template) to return a function that returns an HTML string when passed an object: <br>
+</h4>
+
+<pre><code>var fnRender = nostache(strTemplate),
+strOutput = fnRender(objData);
+</code></pre>
+
+<h4>
+<a id="a-string-template-and-object-of-data-to-invoke-immediately" class="anchor" href="#a-string-template-and-object-of-data-to-invoke-immediately" aria-hidden="true"><span class="octicon octicon-link"></span></a>(a string template and object of data) to invoke immediately:<br>
+</h4>
+
+<p><code>strOutput=nostache(strTemplate, object);</code></p>
+
+<h4>
+<a id="a-string-template-object-of-data-and-object-of-importsimports-" class="anchor" href="#a-string-template-object-of-data-and-object-of-importsimports-" aria-hidden="true"><span class="octicon octicon-link"></span></a>(a string template, object of data, and object of imports/imports) :</h4>
+
+<p><code>strOutput = nostache(strTemplate, objData, objImports);</code> <br>
+<code>fnRender = nostache(strTemplate, null, objImports);</code> </p>
+
+<h2>
+<a id="compared-to-mustache-handlebars-and-hogan" class="anchor" href="#compared-to-mustache-handlebars-and-hogan" aria-hidden="true"><span class="octicon octicon-link"></span></a>Compared to Mustache, Handlebars, and Hogan</h2>
+
+<p>Nostache is largely congruent with Mustache/Hogan, with many added features. It's not logic-less (JS expressions can be used mid-template). Nostaches uses <code>{{.arr}}</code> instead of <code>{{#arr}}</code> to avoid ambiguity with conditionals <code>{{#huh}}</code> that require run-time branching. Nostache also needs pure functions, so it uses <code>this</code> in front of plain injections (see below). Those injections are also not HTML escaped by default like Mustache. Handlebars shares many capabilities with Nostache, but Nostache syntax is more explict on the closing tags, ex. <code>{{/title}}{{/comments}}</code> instead of <code>{{/if}}{{/each}}</code>.</p>
+
+<h2>
+<a id="syntax-features" class="anchor" href="#syntax-features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Syntax Features</h2>
+
+<h3>
+<a id="injection" class="anchor" href="#injection" aria-hidden="true"><span class="octicon octicon-link"></span></a>Injection</h3>
+
+<p><code>{{this.name}}</code> | <code>@name</code> | <code>{{this.sub.name.prop}}</code> | <code>{{this.user['name']}}</code> | <code>{{this.name.bold()}}</code>  <br>
+Inserts the value of the named path. Unlike Mustache, you can use bracket notation and invoke methods inline, even passing arguments to methods via primitives or early-run <em>imports</em>. You can perform calculations mid-expression using virtually any valid javascript expression. You can reach not only in-scope variables, but globals like <code>Math.random()</code> as well. Also keep in mind that you can use ES6 template strings to inject dynamic values into the template before it executes.
+<br> ex: <code>nostache("Hello {{this.name}}", {name: "Fred"}) == "Hello Fred";</code>
+<br> ex: <code>nostache("Hello &lt;b&gt;{{this.name}}&lt;/b&gt;", {name:"Fred"}) == "Hello &lt;b&gt;Fred&lt;/b&gt;";</code>
+<br> ex: <code>nostache("Hello {{this.name}}", {name:"Fred".bold()}) == "Hello &lt;b&gt;Fred&lt;/b&gt;";</code>
+<br> ex: <code>nostache("Hello {{this.name.bold()}}", {name:"Fred"}) == "Hello &lt;b&gt;Fred&lt;/b&gt;";</code>
+<br> ex: <code>nostache("Random Number: {{1/Math.random()}}", {});</code></p>
+
+<h3>
+<a id="imports" class="anchor" href="#imports" aria-hidden="true"><span class="octicon octicon-link"></span></a>Imports</h3>
+
+<p><code>{{&gt;name}}</code> <br>
+Imports use the same syntax, but work slightly differently than Mustache's partials. Whereas Mustache partials are executed in-flow and with surrounding context, Nostache imports run globally just prior to templating. Global (flat) processing executes much faster than Mustache's, but also means that Nostache imports cannot import other imports. All imported values should be directed properties of the <em>imports</em> object (no nested sub-objects). You can omit the <em>imports</em> object at call-time, which triggers import resolution to look at the <em>this</em> object instead, which allows a handy way to bind() a set of resources to a rendering function. As they execute, imports simply replace literal text, with no consideration of context or validity. This is a good thing because you can inject template code, and it will get executed as though it were hard-coded, providing a macro-like stage of code execution.</p>
+
+<h3>
+<a id="looping" class="anchor" href="#looping" aria-hidden="true"><span class="octicon octicon-link"></span></a>Looping</h3>
+
+<h4>
+<a id="arr-array-iteration" class="anchor" href="#arr-array-iteration" aria-hidden="true"><span class="octicon octicon-link"></span></a>{{.arr}} Array Iteration</h4>
+
+<p><code>{{.users}}</code> <br>
+Iterates data Arrays and repeats their content for each element in the Array.
+Due to the simplicity of the engine, there is on one restriction on nested looping: you cannont have a duplicated property name iterated on different nested levels; eg. <code>{users:{users:[1,2,3]}}</code> is no good.
+<br> ex: <code>nostache("{{.numbers}}#{{/numbers}}", {numbers:[11,22,33]}) == "###";</code>
+<br> ex: <code>nostache("{{.numbers}}{{.}} {{/numbers}}", {numbers:[11,22,33]}) == "11 22 33 ";</code>
+<br> ex: <code>nostache("{{.numbers}}{{.}}{{SEP}}, {{/SEP}}{{/numbers}}", {numbers:[11,22,33]}) == "11, 22, 33";</code>
+<br> ex: <code>nostache("{{.numbers}}{{INDEX}}:{{.}} {{/numbers}}", {numbers:[11,22,33]}) == "1:11 2:22 3:33 ";</code>
+<br> ex: <code>nostache("{{.numbers}}{{INDEX}}:{{.}}{{SEP}}, {{/SEP}}{{/numbers}}", {numbers:[11,22,33]}) == "1:11, 2:22, 3:33"</code>
+<br> ex: <code>nostache("{{.numbers}}{{ (i%2) ? i : ''}}{{/numbers}}", {numbers:[{i:11},{i:22},{i:33}]}) == "1133";</code></p>
+
+<h4>
+<a id="objkey-object-iteration" class="anchor" href="#objkey-object-iteration" aria-hidden="true"><span class="octicon octicon-link"></span></a>{{.obj:key}} Object Iteration</h4>
+
+<p>Iterates over objects using a placeholder name on the section tag, prefixed by ":". <br>
+ Inside the section, the key as a tag will equal the name of the object property's key, and <code>.</code> will equal the property value.
+<br> ex:  <code>nostache('{{.a:k}}{{k}}: {{.}} {{/a:k}}', {a:{b:1,c:5}}) == "b: 1 c: 5 ";</code></p>
+
+<h3>
+<a id="conditionals" class="anchor" href="#conditionals" aria-hidden="true"><span class="octicon octicon-link"></span></a>Conditionals</h3>
+
+<p><code>{{#total&gt;0}}</code> | <code>{{^total&gt;0}}</code> | <code>{{#section=="home"}}</code> <br>
+This is a big piece of functionality missing from Mustache.js, and can be quite helpful when constructing views. If the expression returns falsy, the contents are ommited. If the expression is truthy, the contents are included/executed. This can help add "active" classes to navigation and show/hide sections content according to task/location/time/etc. Logic in the template allow declarative view definition and eliminates the need for DOM-binding to achieve view updates.
+<br> ex: <code>nostache("i is {{#i &gt; 5}}big{{/i &gt; 5}}{{#i&lt;6}}small{{/i&lt;6}}", {i: 2}) == "i is small";</code>
+<br> ex: <code>nostache("i is {{#i &gt; 5}}big{{/i &gt; 5}}{{#i&lt;6}}small{{/i&lt;6}}", {i: 9}) == "i is big";</code></p>
+
+<h3>
+<a id="razor-syntax" class="anchor" href="#razor-syntax" aria-hidden="true"><span class="octicon octicon-link"></span></a>Razor Syntax</h3>
+
+<p><code>@lname, @fname</code> | <code>@#users  @INDEX: @name  @/users</code> <br>
+"Inspired" by MS's VS/MVC razor templates, this alternative syntax can keep visual boilerplate costs down. You can use it for injection, looping, and conditionals, but the allowed characters are more restricted that the traditional <code>{{}}</code> delimiters (<code>\w\.$|</code>) , so it's not the best choice for complex logic. Lastly, it avoids mistaking email addresses for tokens by insisting upon a non-wordy char to the left of the <code>@</code>.
+<br> ex: <code>nostache("Hello @name", {name: "Fred"}) == "Hello Fred";</code>
+<br> ex: <code>nostache("Chars: @name.length", {name: "Fred"}) == "Chars: 4";</code>
+<br> ex: <code>nostache("Hello @user.name", { user: {name: "Fred"} }) == "Hello Fred";</code></p>
+
+<h3>
+<a id="path-else-syntax" class="anchor" href="#path-else-syntax" aria-hidden="true"><span class="octicon octicon-link"></span></a>{{!path}} else syntax</h3>
+
+<p><code>{{!path}}</code> turns into <code>{{/path}}{{^path}}</code>, for simpler <em>else</em> handling of regular mustache conditionals.
+<br> ex: <code>nostache("{{#i}}yes{{!i}}no{{/i}}", {i: 9}) == "yes";</code>
+<br> ex: <code>nostache("{{#i}}yes{{!i}}no{{/i}}", {i: 0}) == "no";</code></p>
+
+<h3>
+<a id="index" class="anchor" href="#index" aria-hidden="true"><span class="octicon octicon-link"></span></a>{{INDEX}}</h3>
+
+<p>Simple "contstant" that returns the current index when iterating an Array.
+<br> ex: <code>nostache("{{.numbers}}{{INDEX}}:{{.}} {{/numbers}}", {numbers:[11,22,33]}) == "1:11 2:22 3:33 ";</code></p>
+
+<h3>
+<a id="sep-mini-section" class="anchor" href="#sep-mini-section" aria-hidden="true"><span class="octicon octicon-link"></span></a>{{SEP}} mini-section</h3>
+
+<p>Simple "constant" that returns the enclosed block for every value except for the last. 
+<br> ex: <code>nostache("{{.numbers}}{{.}}{{SEP}}, {{/SEP}}{{/numbers}}", {numbers:[11,22,33]}) == "11, 22, 33";</code></p>
+
+<h3>
+<a id="__key-root-syntax" class="anchor" href="#__key-root-syntax" aria-hidden="true"><span class="octicon octicon-link"></span></a>{{__.key}} root syntax</h3>
+
+<p><code>{{__.key}}</code> reaches <em>key</em> on the data object given to nostache, bypassing local conflicts. 
+<br> ex:  <code>nostache('{{.b}}{{this.a}}|{{__.a}} {{/b}}', {a:123, b:[{a:1}]} ) == "1|123 ";</code></p>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/rndme/nostache">Nostache</a> is maintained by <a href="https://github.com/rndme">rndme</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
