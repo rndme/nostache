@@ -17,7 +17,7 @@ strOutput = fnRender(objData);
 #### (a string template and object of data) to invoke immediately:<br />
 `strOutput=nostache(strTemplate, object);`
 
-#### (a string template, object of data, and object of imports/imports) :
+#### (a string template, object of data, and object of imports (partials) ) :
 `strOutput = nostache(strTemplate, objData, objImports);` <br />
 `fnRender = nostache(strTemplate, null, objImports);` 
 
