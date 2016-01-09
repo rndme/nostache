@@ -1,8 +1,21 @@
 # nostache
 ### mustache.js-like templates w/ a tiny ES6 core
 
+* [Design](#design)
 * [Usage](#usage)
-* [Looping](#looping)
+* [Compared to Mustache, Handlebars, and Hogan](#compared-to-mustache-handlebars-and-hogan)
+* [Syntax Features](#syntax-features)
+   * [Injection](#injection)
+   * [Imports](#imports)
+   * [Looping](#looping)
+   * [Conditionals](#conditionals)
+   * [Razor Syntax](#razor-syntax)
+   * [{{|path}} else syntax](#path-else-syntax)
+   * [{{INDEX}}](#index)
+   * [{{SEP}} mini-section](#sep-mini-section)
+   * [{{__.key}} root syntax](#__key-root-syntax)
+ 
+ 
 
 
 ## Design
