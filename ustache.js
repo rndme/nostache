@@ -18,7 +18,7 @@
 	rxCarrot = /\$\{\.\}/g,				// ${.}
 	rxPath = /\$\{\s*([\w\.]+)\s*\}/g,		// ${...}
 	rxReserved = /\b((this)|(SEP)|(INDEX)|(KEY)|(__)|(SCOPE))\b/,
-	rxDouble = /this\.\./g,
+	rxDouble = /(this\.\.)|(this\.this)/g,
 	json = JSON.stringify;	
   
 	function _tmp(strTemplate, objContext, SCOPE, numIndex, blnInnerCall, arrList, varAllData) {	// string to ES6 converter/executer
