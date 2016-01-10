@@ -19,6 +19,7 @@
 	rxPath = /\$\{\s*([\w\.]+)\s*\}/g,		// ${...}
 	rxReserved = /\b((this)|(SEP)|(INDEX)|(KEY)|(__)|(SCOPE))\b/,
 	rxDouble = /(this\.\.)|(this\.this)/g,
+	rxThisDot = /this\.([\W$])/g,
 	json = JSON.stringify;	
   
 	function _tmp(strTemplate, objContext, SCOPE, numIndex, blnInnerCall, arrList, varAllData) {	// string to ES6 converter/executer
@@ -36,8 +37,8 @@
 		.replace(rxIf, function(j,k,arr,content){var tt= "this["+json(arr)+"]";	return "${ " + tt +" ? ( typeof "+tt+"=='object' ? ( Array.isArray("+tt+")? ("+tt+") : ["+tt+"]   ).map((a,b,c)=>_tmp.call(this,"+json(content)+",a,SCOPE,b,true,c,__),this).join('') :  _tmp.call(this,(typeof "+tt+"=='function'?"+tt+".call(this,"+json(content)+"):"+json(content)+"),this,SCOPE,0,true,[],'') 		  ) : '' ";})
 		.replace(rxCarrot, "${this}")			// replace {{.}} with this pointer
 		.replace(rxPath, function(j,path){ return rxReserved.test(path) ? "${"+path+"}" : "${ok(this."+path+",this)}"; })	  
-		.replace(rxDouble,"this."); 			// fix possible dot dot bug to pass mustache unit tests
-
+		.replace(rxDouble,"this.") 			// fix possible dot dot bug to pass mustache unit tests
+		.replace(rxThisDot ,"this$1")			// fix "this." dandling dots
 		var rez = Function("_tmp, ob, __, KEY, SCOPE", "\"use strict\"; "+escapeHtml+ok+" return `" + strTemplate + "`;");	// build string output renderer function
 		if(blnInnerCall) return rez.call(objContext, _tmp, objContext, varAllData, arrList[numIndex],SCOPE);// if internally called, returns composited  string using context (not whole data)
 		function _apply(data) { return rez.call(data||{}, _tmp, data, data,"__",SCOPE); }; // returns a render function bound to the template internal renderer
@@ -56,4 +57,3 @@
   function ok(v,c,esc){var u; return (esc===true?escapeHtml:String)(v==u?'':(typeof v==='function'? v.call(c,v) : v));}
   function escapeHtml(a){return String(a).replace(/[&<>"'`=\/]/g,function(a){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;","/":"&#x2F;","`":"&#x60;","=":"&#x3D;"}[a]})};
 }));
-  
