@@ -38,7 +38,7 @@
 		.replace(rxCarrot, "${this}")			// replace {{.}} with this pointer
 		.replace(rxPath, function(j,path){ return rxReserved.test(path) ? "${"+path+"}" : "${ok(this."+path+",this)}"; })	  
 		.replace(rxDouble,"this.") 			// fix possible dot dot bug to pass mustache unit tests
-		.replace(rxThisDot ,"this$1")			// fix "this." dandling dots
+		.replace(rxThisDot ,"this$1")			// fix "this." dangling dots
 		var rez = Function("_tmp, ob, __, KEY, SCOPE", "\"use strict\"; "+escapeHtml+ok+" return `" + strTemplate + "`;");	// build string output renderer function
 		if(blnInnerCall) return rez.call(objContext, _tmp, objContext, varAllData, arrList[numIndex],SCOPE);// if internally called, returns composited  string using context (not whole data)
 		function _apply(data) { return rez.call(data||{}, _tmp, data, data,"__",SCOPE); }; // returns a render function bound to the template internal renderer
