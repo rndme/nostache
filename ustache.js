@@ -34,7 +34,7 @@
 		.replace(rxNot, "${(!this.$2||Array.isArray(this.$2)&&this.$2.length===0)?\"$3\":''")		// condense NOT block into template w/ mustache rules
 		.replace(rxObj, function(j,o,s){return "${Object.keys(this."+o+").map(function(a,b,c){return _tmp.call(this,"+json(s)+",this[a]||a,SCOPE,b,true,c,__);},this["+json(o)+"]).join('')";}) // object iteration
 		.replace(rxCond, "${this.$2?\"$3\":''")		// condense conditional block into ES6 template expression
-		.replace(rxIf, function(j,k,arr,content){var tt= "this["+json(arr)+"]";	return "${ " + tt +" ? ( typeof "+tt+"=='object' ? ( Array.isArray("+tt+")? ("+tt+") : ["+tt+"]   ).map((a,b,c)=>_tmp.call(this,"+json(content)+",a,SCOPE,b,true,c,__),this).join('') :  _tmp.call(this,(typeof "+tt+"=='function'?"+tt+".call(this,"+json(content)+"):"+json(content)+"),this,SCOPE,b,true,[],'') 		  ) : '' ";})
+		.replace(rxIf, function(j,k,arr,content){var tt= "this["+json(arr)+"]";	return "${ " + tt +" ? ( typeof "+tt+"=='object' ? ( Array.isArray("+tt+")? ("+tt+") : ["+tt+"]   ).map((a,b,c)=>_tmp.call(this,"+json(content)+",a,SCOPE,b,true,c,__),this).join('') :  _tmp.call(this,(typeof "+tt+"=='function'?"+tt+".call(this,"+json(content)+"):"+json(content)+"),this,SCOPE,0,true,[],'') 		  ) : '' ";})
 		.replace(rxCarrot, "${this}")			// replace {{.}} with this pointer
 		.replace(rxPath, function(j,path){ return rxReserved.test(path) ? "${"+path+"}" : "${ok(this."+path+",this)}"; })	  
 		.replace(rxDouble,"this.") 			// fix possible dot dot bug to pass mustache unit tests
