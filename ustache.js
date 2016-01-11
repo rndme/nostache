@@ -40,7 +40,7 @@
 		.replace(rxDouble,"this.") 			// fix possible dot dot bug to pass mustache unit tests
 		.replace(rxThisDot ,"this$1")			// fix "this." dangling dots
 		var rez = Function("_tmp, ob, __, KEY, SCOPE", "\"use strict\"; "+escapeHtml+ok+" return `" + strTemplate + "`;");	// build string output renderer function
-		if(blnInnerCall) return rez.call(objContext, _tmp, objContext, varAllData, arrList[numIndex],SCOPE);// if internally called, returns composited  string using context (not whole data)
+		if(blnInnerCall) return rez.call(objContext, _tmp, objContext, varAllData, arrList[numIndex]||numIndex,SCOPE);// if internally called, returns composited  string using context (not whole data)
 		function _apply(data) { return rez.call(data||{}, _tmp, data, data,"__",SCOPE); }; // returns a render function bound to the template internal renderer
 		_apply.SCOPE=SCOPE;
 		return _apply;
