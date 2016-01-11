@@ -22,7 +22,7 @@
 	rxThisDot = /this\.([\W$])/g,
 	json = JSON.stringify;	
   
-	function _tmp(strTemplate, objContext, SCOPE, numIndex, blnInnerCall, arrList, varAllData) {	// string to ES6 converter/executer
+	function _tmp(strTemplate, objContext, SCOPE, numIndex, blnInnerCall, arrList, varAllData, ISOBJECT) {	// string to ES6 converter/executer
 		strTemplate = String(strTemplate)		// string FunctionBody of the dynamic rednerer
 		.replace(rxIndex, numIndex + 1) 			// turn INDEX keyword into numeric literal
 		.replace(rxRazor, "$1{{this.$2}}") 		// convert Razor to normal syntax
@@ -32,7 +32,7 @@
 		.replace(rxComments, "") 			// strip comment blocks
 		.replace(rxBraces, "${$1}")			// turn brace expressions into template string literals
 		.replace(rxNot, "${(!this.$2||Array.isArray(this.$2)&&this.$2.length===0)?\"$3\":''")		// condense NOT block into template w/ mustache rules
-		.replace(rxObj, function(j,o,s){return "${Object.keys(this."+o+").map(function(a,b,c){return _tmp.call(this,"+json(s)+",this[a]||a,SCOPE,b,true,c,__);},this["+json(o)+"]).join('')";}) // object iteration
+		.replace(rxObj, function(j,o,s){return "${Object.keys(this."+o+").map(function(a,b,c){return _tmp.call(this,"+json(s)+",this[a]||a,SCOPE,b,true,c,__,true);},this["+json(o)+"]).join('')";}) // object iteration
 		.replace(rxCond, "${this.$2?\"$3\":''")		// condense conditional block into ES6 template expression
 		.replace(rxIf, function(j,k,arr,content){var tt= "this["+json(arr)+"]";	return "${ " + tt +" ? ( typeof "+tt+"=='object' ? ( Array.isArray("+tt+")? ("+tt+") : ["+tt+"]   ).map((a,b,c)=>_tmp.call(this,"+json(content)+",a,SCOPE,b,true,c,__),this).join('') :  _tmp.call(this,(typeof "+tt+"=='function'?"+tt+".call(this,"+json(content)+"):"+json(content)+"),this,SCOPE,0,true,[],'') 		  ) : '' ";})
 		.replace(rxCarrot, "${this}")			// replace {{.}} with this pointer
@@ -40,7 +40,7 @@
 		.replace(rxDouble,"this.") 			// fix possible dot dot bug to pass mustache unit tests
 		.replace(rxThisDot ,"this$1")			// fix "this." dangling dots
 		var rez = Function("_tmp, ob, __, KEY, SCOPE", "\"use strict\"; "+escapeHtml+ok+" return `" + strTemplate + "`;");	// build string output renderer function
-		if(blnInnerCall) return rez.call(objContext, _tmp, objContext, varAllData, arrList[numIndex]||numIndex,SCOPE);// if internally called, returns composited  string using context (not whole data)
+		if(blnInnerCall) return rez.call(objContext, _tmp, objContext, varAllData,  ISOBJECT?arrList[numIndex]:numIndex,SCOPE);// if internally called, returns composited  string using context (not whole data)
 		function _apply(data) { return rez.call(data||{}, _tmp, data, data,"__",SCOPE); }; // returns a render function bound to the template internal renderer
 		_apply.SCOPE=SCOPE;
 		return _apply;
