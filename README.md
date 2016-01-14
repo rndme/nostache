@@ -79,8 +79,8 @@ Due to the simplicity of the engine, there is on one restriction on nested loopi
 <br /> ex: ` ustache("{{#numbers}}{{.}} {{/numbers}}", {numbers:[11,22,33]}) == "11 22 33 "; `
 <br /> ex: ` ustache("{{#numbers}}{{.}}{{SEP}}, {{/SEP}}{{/numbers}}", {numbers:[11,22,33]}) == "11, 22, 33"; `
 <br /> ex: ` ustache("{{#numbers}}{{INDEX}}:{{.}} {{/numbers}}", {numbers:[11,22,33]}) == "1:11 2:22 3:33 "; `
-<br /> ex: ` ustache("{{#numbers}}{{INDEX}}:{{.}}{{SEP}}, {{/SEP}}{{/numbers}}", {numbers:[11,22,33]}) == "1:11, 2:22, 3:33" `
-<br /> ex: ` ustache("{{#numbers}}{{ (i%2) ? i : ''}}{{/numbers}}", {numbers:[{i:11},{i:22},{i:33}]}) == "1133"; `
+<br /> ex: ` ustache("{{#numbers}}{{INDEX}}:{{.}}{{SEP}}, {{/SEP}}{{/numbers}}", {numbers:[11,22,33]}) == "1:11, 2:22, 3:33"; `
+<br /> ex: ` ustache("{{#numbers}}{{ (this.i%2) ? this.i : ''}}{{/numbers}}", {numbers:[{i:11},{i:22},{i:33}]}) == "1133"; `
  [top](#contents)
   
  
@@ -117,25 +117,25 @@ This is a big piece of functionality missing from Mustache.js, and can be quite 
     
 ### {{INDEX}}
   Simple "contstant" that returns the current index when iterating an Array.
-<br /> ex: ` ustache("{{.numbers}}{{INDEX}}:{{.}} {{/numbers}}", {numbers:[11,22,33]}) == "1:11 2:22 3:33 "; `
+<br /> ex: ` ustache("{{#numbers}}{{INDEX}}:{{.}} {{/numbers}}", {numbers:[11,22,33]}) == "1:11 2:22 3:33 "`
 <br />[top](#contents)
  
  
 ### {{SEP}} mini-section
    Simple "constant" that returns the enclosed block for every value except for the last. 
-<br /> ex: ` ustache("{{.numbers}}{{.}}{{SEP}}, {{/SEP}}{{/numbers}}", {numbers:[11,22,33]}) == "11, 22, 33"; `
+<br /> ex: ` ustache("{{#numbers}}{{.}}{{SEP}}, {{/SEP}}{{/numbers}}", {numbers:[11,22,33]}) == "11, 22, 33"; `
 <br />[top](#contents)
  
  
 ### {{__.key}} root syntax
 `{{__.key}}` reaches _key_ on the data object given to ustache, bypassing local conflicts. 
-<br /> ex:  `ustache('{{.b}}{{this.a}}|{{__.a}} {{/b}}', {a:123, b:[{a:1}]} ) == "1|123 ";`
+<br /> ex:  ` ustache('{{#b}}{{a}}|{{__.a}} {{/b}}', {a:123, b:[{a:1}]} ) == "1|123 "; `
  <br />[top](#contents)
  
  
 ### {{SCOPE}} state object
 `SCOPE` is a maleable internal object available to templates. You can use it to store view state like scroll positions, checkboxes options, active section, etc. The object is auto-created or passed during the initial call to ustache(), and inherited by imports and all code in the template, allowing templates to act more like components. You can reach this object as `SCOPE` from any injection, section, or conditional template tag.
-<br /> ex:  ` nostache("{{SCOPE.nick=this.name.bold(),''}} Hello {{SCOPE.nick}}", {name:"Fred"}) == " Hello <b>Fred</b>";`
+<br /> ex:  ` ustache("{{SCOPE.nick=this.name.bold(),''}} Hello {{SCOPE.nick}}", {name:"Fred"}) == " Hello <b>Fred</b>";`
 <br /> see SCOPE used to make simple components at an [online SCOPE demo](http://pagedemos.com/hfk6pjn6zk8r/)
 
 
