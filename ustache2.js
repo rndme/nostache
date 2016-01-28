@@ -2,28 +2,22 @@
 
 function Template(objData, strTemplate){ //returns a new template function to match the data shape
 
-
-  // replace else expressions: {{|path}} turns into {{/path}}{{^path}}
+      // replace else expressions: {{|path}} turns into {{/path}}{{^path}}
   strTemplate=strTemplate.replace(/\{\{\|([\w\W]+?)\}\}/g, function(j,k){
            return "{{/"+k+"}}{{^"+k+"}}";
-  })
-  // replace array iterators:  {{#arr}} ${self.bold()} {{/arr}}
+  })  // replace array iterators:  {{#arr}} ${self.bold()} {{/arr}}
   strTemplate=strTemplate.replace(/\{\{#([\w.]+)\}\}([\w\W]+?)(\{\{\/\1\}\})/g, function(j,k,v){
            return "${[].map.call("+k+"||[], (self,INDEX)=>\` "+v+"\` ).filter(notNull).join('')}";
-  })
-  // replace conditionals:  {{#x>21}}ADULT{{/x>21}}
+  })  // replace conditionals:  {{#x>21}}ADULT{{/x>21}}
  .replace(/\{\{\?([\w\W]+?)\}\}([\w\W]+?)(\{\{\/\1\}\})/g, function(j,k,v){
            return "${"+k+"?`"+v+"`:''}";
-  })
-  // replace negative conditionals:  {{^x>21}}ADULT{{/x>21}}
+  })  // replace negative conditionals:  {{^x>21}}ADULT{{/x>21}}
  .replace(/\{\{\^([\w\W]+?)\}\}([\w\W]+?)(\{\{\/\1\}\})/g, function(j,k,v){
            return "${!("+k+")?`"+v+"`:''}";
-  })
-  // replace injections:  {{=x}}
+  })  // replace injections:  {{=x}}
   .replace(/\{\{=([\w\W]+?)\}\}/g, function(j,k){
            return "${"+k+"}";
-  })
-  // replace razors:  @x.y 
+  })  // replace razors:  @x.y 
   .replace(/(\W)@([\w.()'",]+)([\s\b\W])/g, function(j,h,b,t){
            return h+"${"+b+"}"+(t||"");
   });
