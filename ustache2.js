@@ -7,7 +7,7 @@ function Template(objData, strTemplate){ //returns a new template function to ma
            return "{{/"+k+"}}{{^"+k+"}}";
   })  // replace array iterators:  {{#arr}} ${self.bold()} {{/arr}}
   strTemplate=strTemplate.replace(/\{\{#([\w.]+)\}\}([\w\W]+?)(\{\{\/\1\}\})/g, function(j,k,v){
-           return "${[].map.call("+k+"||[], (self,INDEX)=>\` "+v+"\` ).filter(notNull).join('')}";
+           return "${[].map.call("+k+"||[], (self,INDEX)=>\` "+v+"\`,this).filter(notNull).join('')}";
   })  // replace conditionals:  {{#x>21}}ADULT{{/x>21}}
  .replace(/\{\{\?([\w\W]+?)\}\}([\w\W]+?)(\{\{\/\1\}\})/g, function(j,k,v){
            return "${"+k+"?`"+v+"`:''}";
