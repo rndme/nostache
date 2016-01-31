@@ -1,25 +1,16 @@
-
-  
 // ustache 2nd gen platform preview [CCBY4]-dandavis
-function Template(strTemplate, objData, objImports, blnNow){ //returns a new template function to match the data shape
-	var s=strTemplate, immed=blnNow||arguments.length==3 && objImports==true;
-	function rep(hint, rx, replacment){	return s= (s.indexOf(hint)!==-1) ? s.replace(rx, replacment) : s, rep;	}
-  
-   	// run imports by replacing tokens with values from the imports object:
- rep("{{>",/\{\{>\s*([\w\W]+?)\s*\}\}/g, function(j,k){
-          return objImports[k];
- })  	// replace else expressions: {{|path}} turns into {{/path}}{{^path}}
- ("{{|",/\{\{\|([\w\W]+?)\}\}/g, function(j,k){
+// ustache 2nd gen platform preview [CCBY4]-dandavis
+function Template(strTemplate, objData){ //returns a new template function to match the data shape
+
+ function rep(hint, rx, replacment){	
+  return strTemplate= (strTemplate.indexOf(hint)!==-1) ? strTemplate.replace(rx, replacment) : strTemplate, rep;
+ }
+
+  	// replace else expressions: {{|path}} turns into {{/path}}{{^path}}
+ rep("{{|",/\{\{\|([\w\W]+?)\}\}/g, function(j,k){
            return "{{/"+k+"}}{{^"+k+"}}";
- })  // replace SEP sections
- ("{{SEP}}",/\{\{SEP\}\}([\w\W]+?)\{\{\/SEP\}\}/g, function(j,v){
-           return "${ALL.length!==INDEX?`"+v+"`:''}";
- })  // replace array iterators:  {{#arr}} ${self.bold()} {{/arr}}
- ("{{#",/\{\{#([\w.]+)\}\}([\w\W]+?)(\{\{\/\1\}\})/g, function(j,k,v){
-	return 	("${[].map.call("+k+"||[], function(self,INDEX,ALL){"+(v.indexOf("self") === -1 ? "with(self)" : "")+
-			 "return ++INDEX&&\`"+v+"\`},this).filter(ok).join('')}");
- })  // replace conditionals:  {{#x>21}}ADULT{{/x>21}}
- ("{{?",/\{\{\?([\w\W]+?)\}\}([\w\W]+?)(\{\{\/\1\}\})/g, function(j,k,v){
+ })   // replace conditionals:  {{#x>21}}ADULT{{/x>21}}
+ ("{{#",/\{\{\?([\w\W]+?)\}\}([\w\W]+?)(\{\{\/\1\}\})/g, function(j,k,v){
            return "${"+k+"?`"+v+"`:''}";
  })  // replace negative conditionals:  {{^x>21}}ADULT{{/x>21}}
  ("{{^",/\{\{\^([\w\W]+?)\}\}([\w\W]+?)(\{\{\/\1\}\})/g, function(j,k,v){
@@ -34,10 +25,11 @@ function Template(strTemplate, objData, objImports, blnNow){ //returns a new tem
            return h+"${"+b+"}"+(t||"");
  });
 
-  var fn= Function("__", "var self=__,ok=x=>x!=null, " + 
+   return  Function("self", "var ok=x=>x!=null, " + 
          Object.keys(objData)
-           .filter(a=>s.indexOf(a)!==-1) // optimize by eliminating shadows for un-used vars
-           .map(a=> a+"=__."+a )+ // assign all used keys in objData to vars
-          ";\n return `"+s+"`;"); // wrap template string around template contents.
-  return immed?fn.call(this, objData):fn;
+           .filter(a=>strTemplate.indexOf(a)!==-1) // optimize by eliminating shadows for un-used vars
+           .filter(/./.test, /^\w+$/) // only alias valid var identifiers
+           .map(key=> key+"=self."+key )+ // assign all used keys in objData to vars
+          ";\n return `"+strTemplate+"`;"); // wrap template string around template contents.
 }
+
