@@ -1,6 +1,6 @@
 # ustache
 ### mustache templates w/ a micro ES6 core
-A 2kb template engine that does 80% of what mustache does, and with extra declarative-view features. <br /> <br />
+An experimental 2kb template engine that does 80% of what mustache does, and with extra declarative-view features. <br /> <br />
 
 ## Contents
 * [Design](#design)
